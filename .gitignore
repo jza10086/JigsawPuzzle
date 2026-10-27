@@ -1,0 +1,8 @@
+.godot/
+qa/*.log
+qa/*.png
+qa/*.mp4
+qa/*.webm
+*.tmp
+.DS_Store
+qa/*.import

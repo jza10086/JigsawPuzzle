@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#f8dfad"/><stop offset="1" stop-color="#fff4d7"/></linearGradient>
+ <linearGradient id="water" x2="0.8" y2="1"><stop stop-color="#a8d8ce"/><stop offset="1" stop-color="#4caca8"/></linearGradient>
+ <linearGradient id="roof" x2="0" y2="1"><stop stop-color="#e98563"/><stop offset="1" stop-color="#ca6150"/></linearGradient>
+</defs>
+<!-- Original artwork: A Little Garden, 2026. All geometry is locally authored. -->
+<path fill="url(#sky)" d="M0 0H900V900H0Z"/>
+<!-- Sunrise and clouds -->
+<g fill="none" stroke="#e4a857" stroke-width="5" stroke-linecap="round"><path d="M127 38V16M127 198V220M48 117H24M207 117H229M72 61L55 45M184 61L200 45M72 175L55 192M184 175L200 191"/></g>
+<circle cx="127" cy="117" r="58" fill="#f3bb59"/><circle cx="111" cy="106" r="42" fill="#f7ca70"/>
+<path fill="#fff8e7" d="M4 217C4 198 24 182 45 187C49 159 90 152 106 178C131 163 156 180 159 201C185 202 188 226 166 232H20C9 231 4 226 4 217Z"/>
+<path fill="#fff8e7" d="M283 93C287 77 302 72 318 79C324 51 361 49 375 72C399 67 414 79 411 95C435 102 435 121 415 126H302C279 123 271 109 283 93Z"/>
+<path fill="#f9efd3" d="M547 159C549 139 567 127 588 133C592 110 621 99 641 115C654 95 684 103 690 123C715 117 733 137 729 152C752 151 764 178 740 186H571C551 185 539 172 547 159Z"/>
+<g stroke="#647f76" stroke-width="4" fill="none" stroke-linecap="round"><path d="M445 81Q457 67 469 80Q482 65 495 76M485 111Q494 101 504 109Q514 98 525 106"/></g>
+<!-- Distant hills connect the full scene -->
+<path fill="#bbd3aa" d="M0 333Q94 243 210 294Q330 208 461 295Q581 234 693 273Q805 220 900 276V565H0Z"/>
+<path fill="#85b49b" d="M0 395Q109 318 234 362Q351 305 490 374Q651 319 747 354Q833 314 900 360V626H0Z"/>
+<path fill="#dce0a1" d="M0 520Q181 457 333 502Q529 443 709 498Q824 468 900 503V900H0Z"/>
+<!-- Sinuous stream, visibly continuous across puzzle cuts -->
+<path fill="#ecdeb2" d="M585 468C487 520 591 584 547 628C505 672 395 654 377 721C356 797 474 834 444 900H668C706 798 540 768 555 721C574 671 691 674 698 604C705 542 628 502 663 468Z"/>
+<path fill="url(#water)" d="M601 468C514 526 613 583 570 638C526 692 418 674 402 725C384 783 505 833 471 900H638C668 813 519 770 529 717C539 661 668 655 673 603C678 545 607 503 641 468Z"/>
+<g fill="none" stroke="#e0f4dc" stroke-width="4" stroke-linecap="round" opacity=".8"><path d="M593 550Q611 558 634 550M581 611Q606 617 629 611M462 718Q480 712 499 716M505 814Q524 821 545 818M549 853Q573 858 598 854M567 879H592M590 662Q608 655 622 658"/></g>
+<!-- Cottage -->
+<path d="M296 332H630V554Q470 590 305 551Z" fill="#f5e9c5" stroke="#bdad87" stroke-width="5"/>
+<path d="M296 332H346V564L305 551Z" fill="#dfcea2"/>
+<path d="M325 328H622V357H325Z" fill="#b96550" opacity=".25"/>
+<path d="M311 267V164H362V261" fill="#d8a681" stroke="#b67d62" stroke-width="4"/>
+<path d="M301 163H372V182H301Z" fill="#e9bc94" stroke="#b67d62" stroke-width="4"/>
+<path d="M320 203H338M342 231H359M312 248H329" stroke="#b77c62" stroke-width="4" stroke-linecap="round"/>
+<path fill="#f7edd4" d="M327 134C295 110 332 90 319 67C357 91 329 108 347 126C356 142 341 148 327 134Z" opacity=".8"/>
+<path d="M255 338L447 204Q464 194 480 207L671 337Z" fill="url(#roof)" stroke="#b05349" stroke-width="6" stroke-linejoin="round"/>
+<g fill="none" stroke="#b85e4d" stroke-width="2" opacity=".45"><path d="M418 226H508M381 250H544M347 274H581M312 298H616M278 322H651M444 226V250M487 226V250M402 250V274M530 250V274M369 274V298M413 274V298M519 274V298M562 274V298M335 298V322M379 298V322M423 298V322M467 314V336M511 298V322M555 298V322M599 298V322"/></g>
+<path d="M254 338H672" stroke="#f4b17e" stroke-width="12" stroke-linecap="round"/>
+<path d="M254 344H672" stroke="#985c4d" stroke-width="4" stroke-linecap="round"/>
+<circle cx="464" cy="286" r="28" fill="#f6d291" stroke="#9d5647" stroke-width="6"/>
+<circle cx="464" cy="286" r="20" fill="#5b9691"/><path d="M464 267V307M444 286H484" stroke="#ffe6b3" stroke-width="5"/>
+<!-- Windows with individual plants -->
+<rect x="354" y="390" width="79" height="83" rx="30" fill="#77b5ac" stroke="#d0ad78" stroke-width="8"/>
+<path d="M393 389V473M354 433H432" stroke="#f8edce" stroke-width="6"/><path d="M361 399L383 395L364 426Z" fill="#d2e6d1"/>
+<path d="M345 379H362V477H345Z" fill="#619c88"/><path d="M425 379H442V477H425Z" fill="#619c88"/><path d="M350 390H357M350 408H357M350 426H357M430 390H437M430 408H437M430 426H437" stroke="#376f68" stroke-width="3"/>
+<path d="M350 476H439L430 499H359Z" fill="#dc825e" stroke="#b56751" stroke-width="3"/>
+<g stroke="#54856c" stroke-width="4"><path d="M367 479L368 462M390 482L387 458M416 481L418 456"/></g>
+<g fill="#f0bc55"><circle cx="368" cy="459" r="10"/><circle cx="388" cy="453" r="11"/><circle cx="418" cy="451" r="9"/></g><g fill="#a66b47"><circle cx="368" cy="459" r="4"/><circle cx="388" cy="453" r="4"/><circle cx="418" cy="451" r="4"/></g>
+<path d="M496 552V426Q496 384 537 384Q578 384 578 426V552Z" fill="#4f8b80" stroke="#c4a774" stroke-width="8"/>
+<path d="M509 423Q509 397 537 397Q565 397 565 423V447H509Z" fill="#b8d8bc"/><path d="M537 399V447M510 424H564" stroke="#e7dba7" stroke-width="5"/>
+<path d="M511 467H563V534H511Z" fill="none" stroke="#7bb1a0" stroke-width="3"/>
+<circle cx="562" cy="472" r="5" fill="#f1c56b"/>
+<path d="M485 553H588L601 569H476Z" fill="#b7b89a"/>
+<path d="M484 566H596L607 578H473Z" fill="#c7caab"/>
+<path d="M607 389V442M595 399H619" stroke="#9c7951" stroke-width="4"/>
+<path d="M596 403H617L620 429H593Z" fill="#edb95a" stroke="#92744f" stroke-width="3"/><path d="M606 407V425" stroke="#ffeab4" stroke-width="5"/>
+<!-- Left fence and garden gate -->
+<g stroke="#a48c66" stroke-width="7" stroke-linejoin="round"><path d="M0 445H280M0 486H281"/><path d="M27 418V511M72 416V505M117 414V501M162 417V500M208 422V502M253 424V506"/></g>
+<g stroke="#f6dfac" stroke-width="13" stroke-linecap="round"><path d="M22 413V507M67 411V501M112 409V497M157 412V496M203 417V498M248 419V502"/></g>
+<!-- Giant orange tree: irregular distinct silhouette -->
+<path d="M760 512C750 426 759 334 742 236M757 382L815 304M754 333L695 278M751 276L786 217" fill="none" stroke="#8f7958" stroke-width="24" stroke-linecap="round"/>
+<path d="M754 505C752 410 765 335 742 239" fill="none" stroke="#b49568" stroke-width="8" stroke-linecap="round"/>
+<path d="M660 291C613 267 617 222 654 209C624 163 661 123 705 133C698 89 744 62 776 87C808 58 855 81 858 117C912 107 937 156 904 190C948 223 923 270 887 278C881 321 831 335 802 309C771 345 724 326 718 299C690 318 667 309 660 291Z" fill="#5f9271"/>
+<path d="M655 215C654 183 690 164 713 180C704 144 743 124 770 147C797 111 844 135 839 166C882 151 907 191 887 219C853 207 837 228 828 247C797 226 770 231 749 260C714 243 691 248 674 267C660 256 651 236 655 215Z" fill="#80ae7b"/>
+<path d="M718 116Q746 97 765 114M849 259Q873 245 887 249M674 285Q693 276 708 283" stroke="#b2c88b" stroke-width="8" fill="none" stroke-linecap="round"/>
+<g fill="#edb151" stroke="#cb9143" stroke-width="2"><circle cx="689" cy="205" r="17"/><circle cx="754" cy="166" r="19"/><circle cx="829" cy="193" r="20"/><circle cx="774" cy="274" r="18"/><circle cx="863" cy="277" r="16"/><circle cx="810" cy="120" r="14"/></g>
+<g fill="#f9d07b"><ellipse cx="684" cy="200" rx="6" ry="7"/><ellipse cx="749" cy="160" rx="6" ry="8"/><ellipse cx="823" cy="187" rx="7" ry="8"/><ellipse cx="768" cy="269" rx="6" ry="7"/></g>
+<g fill="#346c5b"><path d="M689 189Q674 176 669 188Q676 200 689 189M755 148Q766 132 776 142Q773 154 755 148M829 174Q843 159 850 172Q845 183 829 174M773 257Q760 242 752 253Q756 264 773 257M861 261Q870 247 881 255Q877 267 861 261"/></g>
+<!-- Hanging garland crosses sky, roof and tree -->
+<path d="M12 285Q175 359 329 263" fill="none" stroke="#846e52" stroke-width="3"/>
+<g stroke="#fff1c9" stroke-width="2"><path d="M36 295L59 337L79 310Z" fill="#da8668"/><path d="M105 318L130 355L146 324Z" fill="#e7b34d"/><path d="M176 322L202 351L214 317Z" fill="#6ba69c"/><path d="M244 306L274 331L282 291Z" fill="#e4a078"/></g>
+<!-- Flowering shrub and cat bench -->
+<path fill="#538d77" d="M0 567V510Q19 471 48 498Q53 462 87 478Q110 452 129 480Q158 468 170 495Q207 481 212 517Q247 512 248 551Z"/>
+<g fill="#e9a083"><circle cx="38" cy="511" r="11"/><circle cx="80" cy="489" r="9"/><circle cx="119" cy="502" r="12"/><circle cx="182" cy="520" r="10"/><circle cx="151" cy="483" r="8"/></g>
+<g fill="#f4cf76"><circle cx="38" cy="511" r="4"/><circle cx="80" cy="489" r="3"/><circle cx="119" cy="502" r="4"/><circle cx="182" cy="520" r="3"/></g>
+<path d="M61 559H251V580H61Z" fill="#b88457" stroke="#876c4e" stroke-width="4"/><path d="M83 579L75 641M228 579L240 632" stroke="#8a7553" stroke-width="13"/><path d="M78 548V513M238 547V513M78 519H238M78 539H238" stroke="#b18b5f" stroke-width="9" stroke-linecap="round"/>
+<!-- Cat: alert and asymmetric -->
+<path d="M147 554C118 537 125 498 143 483C161 464 185 480 187 507L194 554Z" fill="#deaa61" stroke="#a87949" stroke-width="3"/>
+<path d="M183 550C233 568 241 519 218 518C199 520 214 543 203 546" fill="none" stroke="#deaa61" stroke-width="16" stroke-linecap="round"/>
+<path d="M136 484L133 451L154 466L176 459L190 438L195 479Q175 505 149 493Z" fill="#eabb77" stroke="#a87949" stroke-width="3" stroke-linejoin="round"/>
+<path d="M140 471L139 459L149 470M181 466L188 451L189 474" fill="#cc8763"/>
+<path d="M157 478Q160 474 164 477M180 475Q184 471 187 474" fill="none" stroke="#624f39" stroke-width="3" stroke-linecap="round"/>
+<path d="M169 481L175 480L172 485Z" fill="#a76550"/><path d="M168 490Q174 494 179 487" fill="none" stroke="#936440" stroke-width="2"/>
+<path d="M147 487L125 481M148 491L125 492M185 483L205 475M186 489L207 487" stroke="#9e744c" stroke-width="2"/>
+<path d="M154 513Q174 527 181 514M147 539L158 542M175 532L187 535" fill="none" stroke="#b3824c" stroke-width="5" stroke-linecap="round"/>
+<!-- Watering can and side garden -->
+<path fill="#a0bd82" d="M698 514Q723 470 765 485Q792 456 823 481Q867 465 900 506V666H739Z"/>
+<g fill="none" stroke="#547f5c" stroke-width="5" stroke-linecap="round"><path d="M816 548Q806 500 819 464M819 512Q836 485 849 484M814 493Q795 479 787 468M862 588Q870 546 884 530"/></g>
+<g fill="#749e67"><ellipse cx="808" cy="482" rx="14" ry="7" transform="rotate(38 808 482)"/><ellipse cx="836" cy="494" rx="17" ry="8" transform="rotate(-35 836 494)"/><ellipse cx="819" cy="464" rx="9" ry="18" transform="rotate(10 819 464)"/><ellipse cx="883" cy="543" rx="13" ry="7" transform="rotate(-35 883 543)"/></g>
+<path d="M754 569L748 621Q783 639 813 617L807 566Z" fill="#e2ab61" stroke="#af8151" stroke-width="4"/>
+<path d="M745 568Q779 555 811 568L808 581Q779 588 748 579Z" fill="#f0bd78" stroke="#af8151" stroke-width="3"/>
+<path d="M756 571Q753 532 780 530Q811 530 806 570" fill="none" stroke="#ae8050" stroke-width="8"/>
+<path d="M751 592L718 566L707 573L738 612" fill="#e2ab61" stroke="#af8151" stroke-width="4"/>
+<path d="M702 563L714 558L723 574L710 581Z" fill="#d6a566" stroke="#af8151" stroke-width="3"/>
+<g stroke="#72b3b5" stroke-width="3" stroke-linecap="round"><path d="M698 575L690 584M704 582L699 593M710 588L707 598"/></g>
+<!-- Garden paths and stepping stones -->
+<path d="M473 576Q460 605 419 629Q353 669 299 712L222 900H354Q367 765 427 705Q480 654 514 579Z" fill="#ecd8a9"/>
+<g fill="#b3b59a" stroke="#98a18c" stroke-width="2"><path d="M468 594L492 591L500 601L475 611L460 605Z"/><path d="M440 622L466 614L479 625L455 639L432 634Z"/><path d="M406 651L433 641L449 655L422 673L397 666Z"/><path d="M366 686L393 670L414 683L389 708L361 706Z"/><path d="M331 735L351 711L379 719L362 747L335 755Z"/></g>
+<!-- Wooden arch bridge over stream -->
+<path d="M388 709Q461 672 556 706L567 736Q464 710 381 744Z" fill="#b48e59" stroke="#806a4b" stroke-width="4"/>
+<g stroke="#8f704b" stroke-width="3"><path d="M408 703L403 736M431 696L429 729M455 693L455 724M480 692L481 725M505 695L509 726M530 700L536 731"/></g>
+<path d="M384 704V663M419 688V650M465 680V642M514 683V646M556 697V656" stroke="#8c7250" stroke-width="8" stroke-linecap="round"/>
+<path d="M384 669Q464 625 556 663" fill="none" stroke="#bc9b66" stroke-width="10" stroke-linecap="round"/>
+<path d="M383 688Q466 648 556 681" fill="none" stroke="#c2a372" stroke-width="5"/>
+<!-- Bottom left bicycle, clear quarter-turn orientation -->
+<ellipse cx="163" cy="811" rx="133" ry="22" fill="#9fb583" opacity=".6"/>
+<g fill="#d4d9aa" stroke="#536f64" stroke-width="8"><circle cx="78" cy="775" r="49"/><circle cx="249" cy="775" r="49"/></g>
+<g fill="none" stroke="#9caf91" stroke-width="2"><path d="M78 726V824M29 775H127M44 741L112 809M44 809L112 741M249 726V824M200 775H298M214 740L284 810M214 810L284 740"/></g>
+<g fill="none" stroke="#d7825a" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"><path d="M78 775L127 699L166 775H78L217 704L249 775M127 699H217M166 775L141 684M217 704L203 670"/></g>
+<path d="M127 683H153M202 672L222 652L239 657" fill="none" stroke="#526f63" stroke-width="8" stroke-linecap="round"/>
+<circle cx="166" cy="775" r="10" fill="#738675"/><path d="M166 775L183 793H196" fill="none" stroke="#526f63" stroke-width="5" stroke-linecap="round"/>
+<path d="M228 670H278L271 710H235Z" fill="#bc9b66" stroke="#8e7951" stroke-width="4"/><path d="M232 681H276M234 693H273M244 672L245 709M260 672L259 710" stroke="#dfbd83" stroke-width="3"/>
+<path d="M246 673L247 642M263 674L265 635" stroke="#5b8d69" stroke-width="4"/>
+<g fill="#e1a37b"><circle cx="247" cy="638" r="13"/><circle cx="266" cy="631" r="11"/></g><g fill="#f8db8b"><circle cx="247" cy="638" r="5"/><circle cx="266" cy="631" r="4"/></g>
+<!-- Picnic lawn -->
+<path fill="#9ebb87" d="M654 687Q752 640 900 674V900H648Q683 842 645 801Z"/>
+<path d="M676 736L842 700L894 836L702 875Z" fill="#8fa779" opacity=".65"/>
+<path d="M668 722L831 689L885 821L696 862Z" fill="#de8b72" stroke="#d47e66" stroke-width="3"/>
+<polygon points="668.0,722.0 684.3,718.7 688.1,736.1 671.5,739.5" fill="#f5c49c" opacity=".75"/><polygon points="700.6,715.4 716.9,712.1 721.4,729.3 704.8,732.7" fill="#f5c49c" opacity=".75"/><polygon points="733.2,708.8 749.5,705.5 754.6,722.5 738.0,725.9" fill="#f5c49c" opacity=".75"/><polygon points="765.8,702.2 782.1,698.9 787.9,715.7 771.2,719.1" fill="#f5c49c" opacity=".75"/><polygon points="798.4,695.6 814.7,692.3 821.1,708.9 804.5,712.3" fill="#f5c49c" opacity=".75"/><polygon points="688.1,736.1 704.8,732.7 708.9,750.0 692.0,753.5" fill="#f5c49c" opacity=".75"/><polygon points="721.4,729.3 738.0,725.9 742.8,743.0 725.8,746.5" fill="#f5c49c" opacity=".75"/><polygon points="754.6,722.5 771.2,719.1 776.7,736.0 759.8,739.5" fill="#f5c49c" opacity=".75"/><polygon points="787.9,715.7 804.5,712.3 810.6,729.0 793.6,732.5" fill="#f5c49c" opacity=".75"/><polygon points="821.1,708.9 837.8,705.5 844.5,722.0 827.6,725.5" fill="#f5c49c" opacity=".75"/><polygon points="675.0,757.0 692.0,753.5 695.8,770.9 678.5,774.5" fill="#f5c49c" opacity=".75"/><polygon points="708.9,750.0 725.8,746.5 730.3,763.7 713.1,767.3" fill="#f5c49c" opacity=".75"/><polygon points="742.8,743.0 759.8,739.5 764.9,756.5 747.6,760.1" fill="#f5c49c" opacity=".75"/><polygon points="776.7,736.0 793.6,732.5 799.4,749.3 782.1,752.9" fill="#f5c49c" opacity=".75"/><polygon points="810.6,729.0 827.6,725.5 834.0,742.1 816.7,745.7" fill="#f5c49c" opacity=".75"/><polygon points="695.8,770.9 713.1,767.3 717.2,784.6 699.6,788.3" fill="#f5c49c" opacity=".75"/><polygon points="730.3,763.7 747.6,760.1 752.4,777.2 734.8,780.9" fill="#f5c49c" opacity=".75"/><polygon points="764.9,756.5 782.1,752.9 787.6,769.8 770.0,773.5" fill="#f5c49c" opacity=".75"/><polygon points="799.4,749.3 816.7,745.7 822.8,762.4 805.2,766.1" fill="#f5c49c" opacity=".75"/><polygon points="834.0,742.1 851.2,738.5 858.0,755.0 840.4,758.7" fill="#f5c49c" opacity=".75"/><polygon points="682.0,792.0 699.6,788.3 703.4,805.7 685.5,809.5" fill="#f5c49c" opacity=".75"/><polygon points="717.2,784.6 734.8,780.9 739.3,798.1 721.4,801.9" fill="#f5c49c" opacity=".75"/><polygon points="752.4,777.2 770.0,773.5 775.1,790.5 757.2,794.3" fill="#f5c49c" opacity=".75"/><polygon points="787.6,769.8 805.2,766.1 811.0,782.9 793.0,786.7" fill="#f5c49c" opacity=".75"/><polygon points="822.8,762.4 840.4,758.7 846.8,775.3 828.9,779.1" fill="#f5c49c" opacity=".75"/><polygon points="703.4,805.7 721.4,801.9 725.5,819.2 707.2,823.1" fill="#f5c49c" opacity=".75"/><polygon points="739.3,798.1 757.2,794.3 762.0,811.4 743.7,815.3" fill="#f5c49c" opacity=".75"/><polygon points="775.1,790.5 793.0,786.7 798.5,803.6 780.2,807.5" fill="#f5c49c" opacity=".75"/><polygon points="811.0,782.9 828.9,779.1 835.0,795.8 816.7,799.7" fill="#f5c49c" opacity=".75"/><polygon points="846.8,775.3 864.8,771.5 871.5,788.0 853.2,791.9" fill="#f5c49c" opacity=".75"/><polygon points="689.0,827.0 707.2,823.1 711.1,840.5 692.5,844.5" fill="#f5c49c" opacity=".75"/><polygon points="725.5,819.2 743.7,815.3 748.2,832.5 729.7,836.5" fill="#f5c49c" opacity=".75"/><polygon points="762.0,811.4 780.2,807.5 785.4,824.5 766.8,828.5" fill="#f5c49c" opacity=".75"/><polygon points="798.5,803.6 816.7,799.7 822.5,816.5 804.0,820.5" fill="#f5c49c" opacity=".75"/><polygon points="835.0,795.8 853.2,791.9 859.7,808.5 841.1,812.5" fill="#f5c49c" opacity=".75"/><polygon points="711.1,840.5 729.7,836.5 733.8,853.8 714.9,857.9" fill="#f5c49c" opacity=".75"/><polygon points="748.2,832.5 766.8,828.5 771.6,845.6 752.7,849.7" fill="#f5c49c" opacity=".75"/><polygon points="785.4,824.5 804.0,820.5 809.4,837.4 790.5,841.5" fill="#f5c49c" opacity=".75"/><polygon points="822.5,816.5 841.1,812.5 847.2,829.2 828.3,833.3" fill="#f5c49c" opacity=".75"/><polygon points="859.7,808.5 878.2,804.5 885.0,821.0 866.1,825.1" fill="#f5c49c" opacity=".75"/>
+<g stroke="#f3cc9c" stroke-width="3"><path d="M701 855L699 869M717 851L715 865M733 848L731 861M750 844L748 858M767 840L765 853M784 837L782 849M801 833L799 845M819 829L817 841M837 825L835 837M855 821L853 833M872 818L870 829"/></g>
+<ellipse cx="773" cy="778" rx="52" ry="15" fill="#bc7860" opacity=".35"/>
+<path d="M725 727L734 785Q773 802 815 780L819 720Z" fill="#c99b58" stroke="#94764b" stroke-width="4"/>
+<path d="M725 729Q771 744 819 722L819 710Q766 693 725 717Z" fill="#ddba76" stroke="#94764b" stroke-width="4"/>
+<path d="M742 718Q739 675 774 672Q803 670 806 713" fill="none" stroke="#94764b" stroke-width="9"/>
+<path d="M742 716Q741 678 774 677Q799 674 802 712" fill="none" stroke="#e8c68a" stroke-width="4"/>
+<g fill="none" stroke="#a8814e" stroke-width="3"><path d="M734 746Q775 760 816 742M736 760Q776 774 815 756M738 774Q777 786 814 770M746 738L751 790M762 742L766 793M779 741L780 792M797 736L796 788"/></g>
+<path d="M750 729L748 702L777 703L783 735Z" fill="#fff0d0"/><path d="M756 706L758 731M767 706L770 733" stroke="#d97d65" stroke-width="4"/>
+<ellipse cx="729" cy="820" rx="26" ry="11" fill="#fff0ce" stroke="#e3c190" stroke-width="3"/><path d="M717 816L721 797L746 809Z" fill="#eec76c" stroke="#c39a55" stroke-width="2"/><path d="M720 800L742 810" stroke="#ed9d78" stroke-width="5"/>
+<path d="M841 760H861V785Q851 794 841 785Z" fill="#fff1d3" stroke="#c2a87d" stroke-width="3"/><path d="M862 765Q875 765 873 776Q871 783 862 781" fill="none" stroke="#c2a87d" stroke-width="3"/>
+<!-- Lily pads, pebbles, duck -->
+<ellipse cx="592" cy="788" rx="19" ry="8" fill="#6d9f7c"/><path d="M584 788L600 778" stroke="#487a61" stroke-width="2"/>
+<ellipse cx="568" cy="839" rx="24" ry="9" fill="#659d78"/><path d="M561 839L577 830" stroke="#487a61" stroke-width="2"/>
+<ellipse cx="611" cy="857" rx="14" ry="6" fill="#649773"/>
+<ellipse cx="620" cy="603" rx="20" ry="8" fill="#7bbcb6"/><path d="M599 588Q609 604 629 594L641 582Q623 586 617 576Q603 573 599 588Z" fill="#fff1c5"/><circle cx="618" cy="577" r="10" fill="#fff1c5"/><path d="M625 574L638 578L627 582Z" fill="#d89a50"/><circle cx="620" cy="574" r="2" fill="#52766c"/>
+<!-- Foreground leaves and blossoms frame all edges -->
+<g fill="none" stroke="#689569" stroke-width="5" stroke-linecap="round"><path d="M33 900Q51 858 27 816M85 900Q95 861 125 839M181 900Q181 862 211 845M875 900Q854 853 884 832M820 900Q805 878 796 872M16 658Q23 620 12 598M879 641Q865 615 887 594"/></g>
+<g fill="#78a273"><path d="M40 866Q8 862 6 841Q31 840 40 866M43 858Q43 831 64 826Q72 847 43 858M102 874Q81 857 86 841Q110 848 102 874M111 858Q117 837 137 844Q135 863 111 858M187 878Q157 872 161 852Q181 852 187 878M198 862Q200 839 224 838Q230 857 198 862M867 867Q839 858 843 840Q867 842 867 867M868 856Q877 833 898 840Q898 861 868 856M24 638Q40 611 53 625Q51 644 24 638M876 622Q849 622 850 600Q871 599 876 622"/></g>
+<g fill="#eac179"><circle cx="28" cy="811" r="13"/><circle cx="125" cy="836" r="11"/><circle cx="212" cy="841" r="13"/><circle cx="886" cy="828" r="12"/><circle cx="12" cy="593" r="10"/><circle cx="889" cy="590" r="13"/></g>
+<g fill="#b07c48"><circle cx="28" cy="811" r="5"/><circle cx="125" cy="836" r="4"/><circle cx="212" cy="841" r="5"/><circle cx="886" cy="828" r="4"/><circle cx="12" cy="593" r="4"/><circle cx="889" cy="590" r="4"/></g>
+<!-- Little butterfly above the path -->
+<path d="M315 598Q289 572 283 596Q283 610 311 608Q291 624 307 629Q320 628 318 610Q338 627 343 612Q345 596 320 604Q338 583 322 580Q310 581 315 598Z" fill="#d98165" stroke="#b96854" stroke-width="2"/><path d="M315 597L319 614" stroke="#796c4f" stroke-width="3"/>
+<!-- Speckled meadow details -->
+<g fill="#f4d992"><circle cx="291" cy="589" r="3"/><circle cx="271" cy="623" r="4"/><circle cx="219" cy="658" r="3"/><circle cx="46" cy="672" r="3"/><circle cx="310" cy="832" r="4"/><circle cx="363" cy="850" r="3"/><circle cx="688" cy="669" r="3"/><circle cx="733" cy="651" r="4"/><circle cx="847" cy="678" r="3"/><circle cx="822" cy="552" r="4"/><circle cx="842" cy="599" r="3"/><circle cx="22" cy="743" r="3"/><circle cx="331" cy="605" r="3"/><circle cx="659" cy="875" r="3"/></g>
+<g fill="none" stroke="#91ac7a" stroke-width="3" stroke-linecap="round"><path d="M19 703L15 695M19 703L23 693M288 653L284 645M288 653L293 643M359 796L356 787M359 796L365 787M696 645L692 636M696 645L702 636M852 648L849 640M852 648L858 639M763 872L759 865M763 872L768 863M268 861L265 852M268 861L274 852"/></g>
+</svg>
