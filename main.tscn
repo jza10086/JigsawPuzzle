@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1"]
+[ext_resource type="Script" path="res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/main.gd" id="1"]
 
 [node name="MemoryJigsaw" type="Control"]
 layout_mode = 3

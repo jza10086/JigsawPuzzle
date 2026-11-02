@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://games/protocols/godot_party_default_protocol/solo_round.gd" id="1"]
+[ext_resource type="PackedScene" path="main.tscn" id="2"]
+
+[node name="SoloRound" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+gameplay = ExtResource("2")
+columns = Array[Dictionary]([{"key": "time", "title": "用时", "format": "time"}, {"key": "moves", "title": "操作次数", "format": "integer"}])

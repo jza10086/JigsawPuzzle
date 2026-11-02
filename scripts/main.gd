@@ -1,8 +1,10 @@
 extends Control
-const State = preload("res://scripts/puzzle_state.gd")
-const Piece = preload("res://scripts/puzzle_piece.gd")
-const ART = preload("res://assets/garden.svg")
-const FONT = preload("res://assets/AtelierSans.otf")
+
+signal completed(metrics: Dictionary)
+const State = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/puzzle_state.gd")
+const Piece = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/puzzle_piece.gd")
+const ART = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/assets/garden.svg")
+const FONT = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/assets/AtelierSans.otf")
 const INK := Color("244b42")
 const MUTED := Color("7b8e80")
 const PAPER := Color("f5f2e9")
@@ -393,6 +395,7 @@ func _settle_action(epoch: int) -> void:
 		return
 	if state.settle():
 		_sync_pieces()
+		completed.emit({"time": roundi(elapsed * 1000.0), "moves": state.operations})
 	_refresh_ui()
 	queue_redraw()
 

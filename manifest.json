@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+  "core_api_major": 4,
+  "package_version": "1.0.0",
+  "id": "godot_party_default_jigsaw_puzzle",
+  "name": "拾光拼图",
+  "kind": "minigame",
+  "config_schema": "settings.gd",
+  "entry": "party_round.tscn",
+  "player_counts": [
+    1
+  ],
+  "introduction": "观察花园图案，再交换和旋转拼块。恢复九块的正确位置与方向后按用时和操作次数结算。",
+  "dependencies": {
+    "godot_party_default_protocol": "1.0.0"
+  },
+  "adapters": [
+    {
+      "id": "standard",
+      "protocol": {
+        "id": "godot_party_default_protocol",
+        "api_major": 1,
+        "min_api_minor": 0
+      },
+      "config_schema": "settings.gd",
+  "entry": "adapter.gd"
+    }
+  ]
+}
