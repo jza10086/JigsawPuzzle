@@ -23,6 +23,8 @@ var local_seat: int = -1
 var is_host: bool = false
 var configured: bool = false
 var running: bool = false
+## Absent only in the standalone scene preview.
+var party_input: PartyInput
 var result_emitted: bool = false
 var sequence: int = 0
 var view: Dictionary = {}
@@ -90,7 +92,7 @@ func _create_view() -> void:
 	board_view = get_viewport()
 	var controls: Label = Label.new()
 	controls.name = "Controls"
-	controls.text = "左键：抬起 / 放下 / 交换\n右键：顺时针旋转 90°\n滚轮：缩放 · 靠近自己的棋盘"
+	controls.text = "左键：抬起 / 放下 / 交换\n右键：顺时针旋转 90°\n滚轮：缩放 · 靠近自己的棋盘\nEsc：菜单"
 	controls.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	controls.offset_left = 28
 	controls.offset_top = 28
@@ -241,6 +243,8 @@ func _point_to_slot(point: Vector2) -> int:
 	return int((hit.z + 3.0) / 2.0) * 3 + int((hit.x + 3.0) / 2.0)
 
 func _board_input(event: InputEvent) -> void:
+	if party_input != null and party_input.input_blocked:
+		return
 	if not event is InputEventMouseButton or not event.pressed:
 		return
 	match event.button_index:

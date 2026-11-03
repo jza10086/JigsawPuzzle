@@ -17,6 +17,7 @@ func party_setup(context: PartyAPI, config: Dictionary) -> void:
 	request = config.duplicate(true)
 
 func _ready() -> void:
+	add_to_group(&"party_minimal_hud")
 	if api == null:
 		push_error("请从小游戏轮换启动多人比赛；局部预览请运行 main.tscn。")
 		return
@@ -28,6 +29,7 @@ func _ready() -> void:
 		if player.is_local:
 			local_id = player.player_id
 	game = Gameplay.instantiate()
+	game.party_input = api.input
 	game.configure(roster, local_id, api.is_host(), api.get_seed(), api.get_settings())
 	game.action_requested.connect(_send_action)
 	game.snapshot_ready.connect(_broadcast)
