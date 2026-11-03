@@ -1,14 +1,12 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://02pdnb5d2smj"]
 
-[ext_resource type="Script" path="res://games/protocols/godot_party_default_protocol/solo_round.gd" id="1"]
-[ext_resource type="PackedScene" path="main.tscn" id="2"]
+[ext_resource type="Script" uid="uid://42vvlqlyt5ny" path="res://games/minigame/godot_party_default_jigsaw_puzzle/party_round.gd" id="1_uooo2"]
 
-[node name="SoloRound" type="Control"]
+[node name="JigsawMatch" type="Control" unique_id=144905790]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1")
-gameplay = ExtResource("2")
-columns = Array[Dictionary]([{"key": "time", "title": "用时", "format": "time"}, {"key": "moves", "title": "操作次数", "format": "integer"}])
+script = ExtResource("1_uooo2")

@@ -1,16 +1,16 @@
 {
   "manifest_version": 2,
   "core_api_major": 4,
-  "package_version": "1.0.0",
+  "package_version": "1.1.0",
   "id": "godot_party_default_jigsaw_puzzle",
   "name": "拾光拼图",
   "kind": "minigame",
   "config_schema": "settings.gd",
   "entry": "party_round.tscn",
   "player_counts": [
-    1
+    1, 2, 3, 4, 5, 6, 7, 8
   ],
-  "introduction": "观察花园图案，再交换和旋转拼块。恢复九块的正确位置与方向后按用时和操作次数结算。",
+  "introduction": "八人共享九宫格棋盘，外围各拼各的，中央展示记忆答案。首位完成后公开答案并倒计时30秒；两分钟无人完成则平局。默认三轮，按累计名次分结算。",
   "dependencies": {
     "godot_party_default_protocol": "1.0.0"
   },

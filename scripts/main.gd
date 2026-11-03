@@ -1,38 +1,80 @@
 extends Control
-## Local 3D puzzle presentation. The state model owns rules; this scene owns
-## camera projection, tile animation and controls, without framework services.
+## Shared 3D match view and host clock. Transport is injected by party_round.gd;
+## F6 uses one real local participant, leaving the other seven seats empty.
+signal action_requested(data: Dictionary)
+signal snapshot_ready(data: Dictionary)
+signal match_completed(result: Dictionary)
 
-signal completed(metrics: Dictionary)
-
-const State: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/puzzle_state.gd")
+const Match: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/match_state.gd")
+const Settings: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/settings.gd")
 const Piece: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/puzzle_piece.gd")
 const ART: Texture2D = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/assets/garden.svg")
 const FONT: Font = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/assets/AtelierSans.otf")
+const SEATS: Array[int] = [0, 1, 2, 3, 5, 6, 7, 8]
 const TILE_HEIGHT: float = 0.10
 const LIFT_HEIGHT: float = 0.75
 
-var state: PuzzleState = State.new()
+var rules: Match = Match.new()
+var players: Array[Dictionary] = []
+var ids: Array[String] = []
+var local_id: String = ""
+var local_seat: int = -1
+var is_host: bool = false
+var configured: bool = false
+var running: bool = false
+var result_emitted: bool = false
+var sequence: int = 0
+var view: Dictionary = {}
+var publish_clock: float = 0.0
 var pieces: Array[PuzzlePiece] = []
+var seats: Array[Node3D] = []
+var nameplates: Array[Label3D] = []
+var answer: Node3D
+var center_sign: Label3D
 var board: SubViewportContainer
 var board_view: SubViewport
 var world: Node3D
 var camera: Camera3D
 var hover_frame: Node3D
-var reveal_remaining: float = 5.0
-var elapsed: float = 0.0
-var seed_value: int = 0
-var action_tween: Tween
-var animation_epoch: int = 0
-var hover_slot: int = -1
+var zoom_target: float = 0.0
+var zoom_value: float = 0.0
 var follow_pointer: bool = true
 
+## Called before insertion into the scene tree with the session's fixed seat order.
+func configure(roster: Array[Dictionary], my_id: String, host: bool, seed: int, settings: Dictionary) -> void:
+	configured = true
+	players = roster.duplicate(true)
+	local_id = my_id
+	is_host = host
+	for player: Dictionary in players:
+		ids.append(player.player_id)
+	local_seat = ids.find(local_id)
+	if is_host:
+		rules.configure(ids, seed, settings)
+
 func _ready() -> void:
+	var preview: bool = not configured
+	if preview:
+		configure([{"player_id": "preview", "name": "本机玩家", "color": "#438f78"}],
+			"preview", true, randi(), Settings.DEFAULTS)
+		action_requested.connect(func(data: Dictionary) -> void: submit_action(local_id, data))
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_create_view()
 	_create_world()
-	board.resized.connect(_frame_camera)
-	_frame_camera()
-	new_round()
+	board.resized.connect(_update_camera)
+	_update_camera()
+	if preview:
+		start_match()
+
+func start_match() -> void:
+	running = true
+	if is_host:
+		rules.start(Time.get_ticks_msec())
+		_publish()
+
+func stop_match() -> void:
+	running = false
+	set_process(false)
 
 func _create_view() -> void:
 	board = SubViewportContainer.new()
@@ -44,12 +86,10 @@ func _create_view() -> void:
 	board_view = SubViewport.new()
 	board_view.own_world_3d = true
 	board_view.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	board_view.msaa_3d = Viewport.MSAA_4X
 	board.add_child(board_view)
-
 	var controls: Label = Label.new()
 	controls.name = "Controls"
-	controls.text = "左键：抬起 / 放下 / 交换\n右键：顺时针旋转 90°\nR：重新记忆    N：换个开局"
+	controls.text = "左键：抬起 / 放下 / 交换\n右键：顺时针旋转 90°\n滚轮：缩放 · 靠近自己的棋盘"
 	controls.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	controls.offset_left = 28
 	controls.offset_top = 28
@@ -67,7 +107,7 @@ func _create_view() -> void:
 
 func _create_world() -> void:
 	world = Node3D.new()
-	world.name = "PuzzleTable"
+	world.name = "SharedPuzzleTable"
 	board_view.add_child(world)
 	var environment_node: WorldEnvironment = WorldEnvironment.new()
 	var environment: Environment = Environment.new()
@@ -76,7 +116,6 @@ func _create_world() -> void:
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.ambient_light_color = Color("fff4dc")
 	environment.ambient_light_energy = 0.25
-	environment.tonemap_mode = Environment.TONE_MAPPER_LINEAR
 	environment_node.environment = environment
 	world.add_child(environment_node)
 	var light: DirectionalLight3D = DirectionalLight3D.new()
@@ -87,26 +126,63 @@ func _create_world() -> void:
 	world.add_child(light)
 	camera = Camera3D.new()
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.position = Vector3(3.8, 9.5, 6.2)
 	world.add_child(camera)
-	camera.look_at(Vector3.ZERO)
 	camera.current = true
-	_box(world, Vector3(200, 0.2, 200), Vector3(0, -0.65, 0), Color("d9e1d4"))
-	_box(world, Vector3(6.5, 0.32, 6.5), Vector3(0, -0.16, 0), Color("b69a72"))
-	_box(world, Vector3(6.12, 0.04, 6.12), Vector3(0, 0.005, 0), Color("566e5b"))
-	for i: int in 9:
-		var piece: PuzzlePiece = Piece.new()
-		piece.name = "Tile%d" % i
-		piece.artwork = ART
-		piece.tile_id = i
-		world.add_child(piece)
-		pieces.append(piece)
+	_box(world, Vector3(200, 0.2, 200), Vector3(0, -0.8, 0), Color("d9e1d4"))
+	_box(world, Vector3(23, 0.35, 23), Vector3(0, -0.42, 0.2), Color("b69a72"))
+	for seat: int in 8:
+		var area: Node3D = Node3D.new()
+		area.name = "Seat%d" % (seat + 1)
+		area.position = _seat_center(seat)
+		world.add_child(area)
+		seats.append(area)
+		var color: Color = Color(players[seat].color) if seat < players.size() else Color("8b988a")
+		_box(area, Vector3(6.65, 0.26, 6.65), Vector3(0, -0.13, 0), color)
+		_box(area, Vector3(6.12, 0.04, 6.12), Vector3(0, 0.005, 0), Color("566e5b"))
+		for tile: int in 9:
+			var piece: PuzzlePiece = _piece(area, tile)
+			piece.visible = seat < players.size()
+			pieces.append(piece)
+		var plate: Label3D = _sign(area, Vector3(0, 0.05, 3.8), 48)
+		plate.text = "空位" if seat >= players.size() else players[seat].name
+		nameplates.append(plate)
+	answer = Node3D.new()
+	answer.name = "Answer"
+	world.add_child(answer)
+	_box(world, Vector3(6.65, 0.26, 6.65), Vector3(0, -0.13, 0), Color("d5b36f"))
+	for tile: int in 9:
+		_piece(answer, tile)
+	answer.visible = false
+	center_sign = _sign(world, Vector3(0, 0.06, 3.8), 52)
+	center_sign.text = "等待比赛开始"
 	hover_frame = Node3D.new()
 	world.add_child(hover_frame)
 	for offset: float in [-0.98, 0.98]:
 		_box(hover_frame, Vector3(0.035, 0.025, 1.98), Vector3(offset, 0, 0), Color("efbd59"))
 		_box(hover_frame, Vector3(1.98, 0.025, 0.035), Vector3(0, 0, offset), Color("efbd59"))
 	hover_frame.visible = false
+
+func _piece(parent: Node3D, tile: int) -> PuzzlePiece:
+	var piece: PuzzlePiece = Piece.new()
+	piece.name = "Tile%d" % tile
+	piece.artwork = ART
+	piece.tile_id = tile
+	parent.add_child(piece)
+	piece.position = _slot_center(tile)
+	return piece
+
+func _sign(parent: Node3D, position_3d: Vector3, font_size: int) -> Label3D:
+	var label: Label3D = Label3D.new()
+	label.font = FONT
+	label.font_size = font_size
+	label.pixel_size = 0.01
+	label.modulate = Color("244b42")
+	label.outline_modulate = Color("f5f2e9")
+	label.outline_size = 8
+	label.rotation.x = -PI * 0.5
+	label.position = position_3d
+	parent.add_child(label)
+	return label
 
 func _box(parent: Node3D, dimensions: Vector3, center: Vector3, color: Color) -> void:
 	var mesh: BoxMesh = BoxMesh.new()
@@ -120,49 +196,27 @@ func _box(parent: Node3D, dimensions: Vector3, center: Vector3, color: Color) ->
 	instance.position = center
 	parent.add_child(instance)
 
-func _frame_camera() -> void:
-	if camera == null or board.size.y <= 0.0:
-		return
-	camera.size = maxf(9.5, 9.5 / (board.size.x / board.size.y))
-
-func new_round() -> void:
-	seed_value = int(Time.get_ticks_usec()) ^ randi()
-	_start_reveal()
-
-func restart_round() -> void:
-	_start_reveal()
-
-func _start_reveal() -> void:
-	_cancel_tween()
-	state.reset()
-	reveal_remaining = 5.0
-	elapsed = 0.0
-	hover_slot = -1
-	hover_frame.visible = false
-	_sync_pieces()
-
-func _cancel_tween() -> void:
-	animation_epoch += 1
-	if action_tween != null and action_tween.is_valid():
-		action_tween.kill()
-	action_tween = null
-
-func _exit_tree() -> void:
-	_cancel_tween()
-
-func _sync_pieces() -> void:
-	for slot: int in 9:
-		var id: int = state.slots[slot]
-		var piece: PuzzlePiece = pieces[id]
-		piece.position = _slot_center(slot)
-		piece.rotation.y = -state.turns[id] * PI * 0.5
-		piece.set_lifted(slot == state.selected_slot)
+func _seat_center(seat: int) -> Vector3:
+	var cell: int = SEATS[seat]
+	return Vector3((cell % 3 - 1) * 8.0, 0, (cell / 3 - 1) * 8.0)
 
 func _slot_center(slot: int) -> Vector3:
 	return Vector3((slot % 3 - 1) * 2.0, TILE_HEIGHT, (slot / 3 - 1) * 2.0)
 
-## Project the pointer onto the horizontal board, independently of lifted tiles.
-## The fixed camera always faces this plane, so the ray cannot be parallel.
+## Zero yaw keeps the whole board square to the camera. Zoom raises the pitch
+## towards top-down and moves the focus to the local seat, without an abrupt cut.
+func _update_camera() -> void:
+	if camera == null or board.size.y <= 0.0:
+		return
+	var focus: Vector3 = Vector3.ZERO
+	if local_seat >= 0:
+		focus = Vector3.ZERO.lerp(_seat_center(local_seat), zoom_value)
+	var pitch: float = deg_to_rad(lerpf(52.0, 88.0, zoom_value))
+	camera.position = focus + Vector3(0, sin(pitch), cos(pitch)) * 40.0
+	camera.look_at(focus)
+	var extent: float = lerpf(24.5, 8.5, zoom_value)
+	camera.size = maxf(extent, extent / (board.size.x / board.size.y))
+
 func _board_point(point: Vector2, height: float) -> Vector3:
 	var viewport_point: Vector2 = point * Vector2(board_view.size) / board.size
 	var origin: Vector3 = camera.project_ray_origin(viewport_point)
@@ -170,107 +224,147 @@ func _board_point(point: Vector2, height: float) -> Vector3:
 	return origin + direction * ((height - origin.y) / direction.y)
 
 func _point_to_slot(point: Vector2) -> int:
-	if not Rect2(Vector2.ZERO, board.size).has_point(point):
+	if local_seat < 0 or not Rect2(Vector2.ZERO, board.size).has_point(point):
 		return -1
-	var hit: Vector3 = _board_point(point, TILE_HEIGHT + 0.1)
+	var hit: Vector3 = _board_point(point, TILE_HEIGHT + 0.1) - _seat_center(local_seat)
 	if hit.x < -3.0 or hit.x >= 3.0 or hit.z < -3.0 or hit.z >= 3.0:
 		return -1
 	return int((hit.z + 3.0) / 2.0) * 3 + int((hit.x + 3.0) / 2.0)
 
-func _process(delta: float) -> void:
-	if state.phase == State.Phase.REVEAL:
-		reveal_remaining = maxf(0.0, reveal_remaining - delta)
-		if reveal_remaining <= 0.0:
-			_shuffle()
-	elif state.phase == State.Phase.PLAYING:
-		elapsed += delta
-	var pointer: Vector2 = board.get_local_mouse_position()
-	if state.selected_slot >= 0 and not state.busy and follow_pointer:
-		var piece: PuzzlePiece = pieces[state.slots[state.selected_slot]]
-		var hit: Vector3 = _board_point(pointer, LIFT_HEIGHT + 0.1)
-		piece.position = Vector3(clampf(hit.x, -2.0, 2.0), LIFT_HEIGHT, clampf(hit.z, -2.0, 2.0))
-	hover_slot = _point_to_slot(pointer)
-	hover_frame.visible = state.selected_slot >= 0 and not state.busy and hover_slot >= 0
-	if hover_frame.visible:
-		hover_frame.position = _slot_center(hover_slot) + Vector3(0, 0.12, 0)
-
-func _shuffle() -> void:
-	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
-	rng.seed = seed_value
-	state.shuffle_board(rng)
-	action_tween = create_tween().set_parallel(true)
-	action_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	for slot: int in 9:
-		var id: int = state.slots[slot]
-		# Separate travel heights keep the thick tiles from sliding through each other.
-		var target: Vector3 = _slot_center(slot)
-		var travel_height: float = 0.4 + float(id) * 0.23
-		action_tween.tween_property(pieces[id], "position:y", travel_height, 0.18)
-		action_tween.tween_property(pieces[id], "position", Vector3(target.x, travel_height, target.z), 0.55).set_delay(0.18)
-		action_tween.tween_property(pieces[id], "rotation:y", -state.turns[id] * PI * 0.5, 0.55).set_delay(0.18)
-		action_tween.tween_property(pieces[id], "position:y", TILE_HEIGHT, 0.20).set_delay(0.73)
-	var epoch: int = animation_epoch
-	action_tween.chain().tween_callback(func() -> void:
-		if epoch == animation_epoch:
-			state.begin_play())
-
 func _board_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			act_on_slot(_point_to_slot(event.position))
-			board.accept_event()
-		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			rotate_selected_piece()
-			board.accept_event()
-
-func _unhandled_key_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo:
-		match event.physical_keycode:
-			KEY_R:
-				restart_round()
-				get_viewport().set_input_as_handled()
-			KEY_N:
-				new_round()
-				get_viewport().set_input_as_handled()
-
-func act_on_slot(slot: int) -> void:
-	var action: Dictionary = state.click_slot(slot)
-	match action.kind:
-		"pick":
-			pieces[action.id].set_lifted(true)
-			pieces[action.id].position.y = LIFT_HEIGHT
-		"place":
-			_animate_placement(action, false)
-		"swap":
-			_animate_placement(action, true)
-
-func _animate_placement(action: Dictionary, swapping: bool) -> void:
-	var piece: PuzzlePiece = pieces[action.id]
-	piece.set_lifted(false)
-	action_tween = create_tween().set_parallel(true)
-	action_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	var target: int = action.target if swapping else action.slot
-	var destination: Vector3 = _slot_center(target)
-	action_tween.tween_property(piece, "position", Vector3(destination.x, LIFT_HEIGHT, destination.z), 0.22)
-	if swapping:
-		action_tween.tween_property(pieces[action.other], "position", _slot_center(action.source), 0.22)
-	action_tween.chain().tween_property(piece, "position:y", TILE_HEIGHT, 0.14)
-	var epoch: int = animation_epoch
-	action_tween.chain().tween_callback(func() -> void: _settle_action(epoch))
-
-func rotate_selected_piece() -> void:
-	var id: int = state.rotate_selected()
-	if id < 0:
+	if not event is InputEventMouseButton or not event.pressed:
 		return
-	var piece: PuzzlePiece = pieces[id]
-	action_tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	action_tween.tween_property(piece, "rotation:y", piece.rotation.y - PI * 0.5, 0.16)
-	var epoch: int = animation_epoch
-	action_tween.tween_callback(func() -> void: _settle_action(epoch))
+	match event.button_index:
+		MOUSE_BUTTON_WHEEL_UP:
+			zoom_target = clampf(zoom_target + 0.125, 0.0, 1.0)
+		MOUSE_BUTTON_WHEEL_DOWN:
+			zoom_target = clampf(zoom_target - 0.125, 0.0, 1.0)
+		MOUSE_BUTTON_LEFT:
+			var slot: int = _point_to_slot(event.position)
+			if slot >= 0:
+				_send_action({"kind": "click", "slot": slot})
+		MOUSE_BUTTON_RIGHT:
+			_send_action({"kind": "rotate"})
+	board.accept_event()
 
-func _settle_action(epoch: int) -> void:
-	if epoch != animation_epoch:
+func _send_action(data: Dictionary) -> void:
+	if not running or local_seat < 0 or view.is_empty():
 		return
-	if state.settle():
-		_sync_pieces()
-		completed.emit({"time": roundi(elapsed * 1000.0), "moves": state.operations})
+	if view.phase not in [Match.Phase.PLAYING, Match.Phase.CLOSING]:
+		return
+	if view.players[local_seat].time >= 0 or view.players[local_seat].withdrawn:
+		return
+	sequence += 1
+	data["seq"] = sequence
+	data["round"] = view.round
+	action_requested.emit(data)
+
+## Identity comes from the transport, never from a claimed ID in the payload.
+func receive_action(sender_peer: int, sender_ids: Array, data: Dictionary) -> void:
+	if not running or not is_host:
+		return
+	for player: Dictionary in players:
+		if player.peer_id == sender_peer and player.player_id in sender_ids:
+			submit_action(player.player_id, data)
+			return
+
+func submit_action(id: String, data: Dictionary) -> void:
+	if not running or not is_host:
+		return
+	rules.apply_action(id, data, Time.get_ticks_msec())
+	_publish()
+
+func withdraw_player(id: String) -> void:
+	if is_host and running:
+		rules.withdraw(id, Time.get_ticks_msec())
+		_publish()
+
+func _publish() -> void:
+	var snapshot: Dictionary = rules.snapshot(Time.get_ticks_msec())
+	# Local host state is trusted; remote snapshots enter through receive_snapshot.
+	_apply_view(snapshot)
+	snapshot_ready.emit(snapshot)
+
+func receive_snapshot(data: Dictionary) -> bool:
+	if not Match.valid_snapshot(data, ids):
+		return false
+	if view.is_empty() or data.revision > view.revision:
+		_apply_view(data)
+	return true
+
+func _apply_view(data: Dictionary) -> void:
+	var new_round: bool = view.is_empty() or data.round != view.round
+	view = data.duplicate(true)
+	answer.visible = view.phase != Match.Phase.PLAYING
+	var seconds: int = ceili(float(view.remaining_ms) / 1000.0)
+	var heading: String = "第 %d / %d 轮" % [view.round, view.rounds]
+	match view.phase:
+		Match.Phase.PREPARE:
+			center_sign.text = "%s · 记忆 %d 秒\n中央是答案，准备开始" % [heading, seconds]
+		Match.Phase.PLAYING:
+			center_sign.text = "%s · 剩余 %d 秒\n首位完成后公开答案" % [heading, seconds]
+		Match.Phase.CLOSING:
+			center_sign.text = "%s · 结算倒计时 %d 秒\n中央答案已公开" % [heading, seconds]
+		Match.Phase.INTERMISSION:
+			center_sign.text = "%s · 本轮结算\n%d 秒后开始下一轮" % [heading, seconds]
+		Match.Phase.FINISHED:
+			center_sign.text = "比赛结束 · 按总分排名\n同分并列"
+	for seat: int in players.size():
+		var row: Dictionary = view.players[seat]
+		var name_text: String = players[seat].name + ("（你）" if seat == local_seat else "")
+		var progress: String = "未完成" if row.time < 0 else "%.2f 秒完成" % (float(row.time) / 1000.0)
+		if row.withdrawn:
+			progress = "已退出"
+		if view.phase == Match.Phase.PREPARE:
+			progress = "准备中"
+		if not view.round_rows.is_empty():
+			var result: Dictionary = view.round_rows[seat]
+			progress = "本轮第 %d 名 +%d" % [result.rank, result.points] if not row.withdrawn else "已退出"
+		if view.phase == Match.Phase.FINISHED and not row.withdrawn:
+			progress = "总排名 第 %d 名" % view.rankings[seat].rank
+		nameplates[seat].text = "%s · %d 分\n%s" % [name_text, row.total, progress]
+		for slot: int in 9:
+			var id: int = row.slots[slot]
+			var piece: PuzzlePiece = pieces[seat * 9 + id]
+			piece.set_lifted(slot == row.selected)
+			if new_round:
+				piece.position = _slot_center(slot)
+				piece.rotation.y = -row.turns[id] * PI * 0.5
+
+func _process(delta: float) -> void:
+	zoom_value = lerpf(zoom_value, zoom_target, 1.0 - exp(-10.0 * delta))
+	_update_camera()
+	if not running:
+		return
+	if is_host:
+		rules.advance(Time.get_ticks_msec())
+		publish_clock += delta
+		if publish_clock >= 0.1:
+			publish_clock = 0.0
+			_publish()
+			if not running:
+				return
+		if rules.phase == Match.Phase.FINISHED and Time.get_ticks_msec() >= rules.phase_deadline and not result_emitted:
+			result_emitted = true
+			match_completed.emit({"rankings": rules.rankings(), "game_data": {"rounds": rules.history.duplicate(true)}})
+	if view.is_empty():
+		return
+	var pointer: Vector2 = board.get_local_mouse_position()
+	for seat: int in players.size():
+		var row: Dictionary = view.players[seat]
+		for slot: int in 9:
+			var id: int = row.slots[slot]
+			var target: Vector3 = _slot_center(slot)
+			if slot == row.selected:
+				target.y = LIFT_HEIGHT
+				if seat == local_seat and follow_pointer:
+					var hit: Vector3 = _board_point(pointer, LIFT_HEIGHT + 0.1) - _seat_center(seat)
+					target.x = clampf(hit.x, -2.0, 2.0)
+					target.z = clampf(hit.z, -2.0, 2.0)
+			var piece: PuzzlePiece = pieces[seat * 9 + id]
+			piece.position = piece.position.lerp(target, 1.0 - exp(-18.0 * delta))
+			piece.rotation.y = lerp_angle(piece.rotation.y, -row.turns[id] * PI * 0.5, 1.0 - exp(-18.0 * delta))
+	var hover: int = _point_to_slot(pointer)
+	hover_frame.visible = local_seat >= 0 and hover >= 0 and view.players[local_seat].selected >= 0
+	if hover_frame.visible:
+		hover_frame.position = _seat_center(local_seat) + _slot_center(hover) + Vector3(0, 0.12, 0)

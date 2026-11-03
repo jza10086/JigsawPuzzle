@@ -1,5 +1,5 @@
 extends RefCounted
-## Only the standard ranking contract is implemented by this blank template.
+## Standard multiplayer match: the parent receives cumulative round points, not rewards.
 
 func check_request(request: Dictionary) -> Dictionary:
 	if request.get("mode") != "standard":
