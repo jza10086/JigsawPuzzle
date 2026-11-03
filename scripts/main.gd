@@ -11,6 +11,7 @@ const Piece: GDScript = preload("res://games/minigame/godot_party_default_jigsaw
 const ART: Texture2D = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/assets/garden.svg")
 const FONT: Font = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/assets/AtelierSans.otf")
 const SEATS: Array[int] = [0, 1, 2, 3, 5, 6, 7, 8]
+const BOARD_SIZE: float = 6.65
 const TILE_HEIGHT: float = 0.10
 const LIFT_HEIGHT: float = 0.75
 
@@ -55,7 +56,7 @@ func configure(roster: Array[Dictionary], my_id: String, host: bool, seed: int, 
 func _ready() -> void:
 	var preview: bool = not configured
 	if preview:
-		configure([{"player_id": "preview", "name": "本机玩家", "color": "#438f78"}],
+		configure([{"player_id": "preview", "name": "本机玩家", "color": "#2962ff"}],
 			"preview", true, randi(), Settings.DEFAULTS)
 		action_requested.connect(func(data: Dictionary) -> void: submit_action(local_id, data))
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -125,11 +126,12 @@ func _create_world() -> void:
 	light.shadow_enabled = true
 	world.add_child(light)
 	camera = Camera3D.new()
-	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+	camera.projection = Camera3D.PROJECTION_PERSPECTIVE
+	camera.fov = 50.0
 	world.add_child(camera)
 	camera.current = true
 	_box(world, Vector3(200, 0.2, 200), Vector3(0, -0.8, 0), Color("d9e1d4"))
-	_box(world, Vector3(23, 0.35, 23), Vector3(0, -0.42, 0.2), Color("b69a72"))
+	_box(world, Vector3(BOARD_SIZE * 3.0 + 0.3, 0.35, BOARD_SIZE * 3.0 + 0.3), Vector3(0, -0.42, 0), Color("b69a72"))
 	for seat: int in 8:
 		var area: Node3D = Node3D.new()
 		area.name = "Seat%d" % (seat + 1)
@@ -137,23 +139,23 @@ func _create_world() -> void:
 		world.add_child(area)
 		seats.append(area)
 		var color: Color = Color(players[seat].color) if seat < players.size() else Color("8b988a")
-		_box(area, Vector3(6.65, 0.26, 6.65), Vector3(0, -0.13, 0), color)
+		_box(area, Vector3(BOARD_SIZE, 0.26, BOARD_SIZE), Vector3(0, -0.13, 0), color)
 		_box(area, Vector3(6.12, 0.04, 6.12), Vector3(0, 0.005, 0), Color("566e5b"))
 		for tile: int in 9:
 			var piece: PuzzlePiece = _piece(area, tile)
 			piece.visible = seat < players.size()
 			pieces.append(piece)
-		var plate: Label3D = _sign(area, Vector3(0, 0.05, 3.8), 48)
+		var plate: Label3D = _sign(area, Vector3(0, 0.15, 3.16), 26)
 		plate.text = "空位" if seat >= players.size() else players[seat].name
 		nameplates.append(plate)
 	answer = Node3D.new()
 	answer.name = "Answer"
 	world.add_child(answer)
-	_box(world, Vector3(6.65, 0.26, 6.65), Vector3(0, -0.13, 0), Color("d5b36f"))
+	_box(world, Vector3(BOARD_SIZE, 0.26, BOARD_SIZE), Vector3(0, -0.13, 0), Color("d5b36f"))
 	for tile: int in 9:
 		_piece(answer, tile)
 	answer.visible = false
-	center_sign = _sign(world, Vector3(0, 0.06, 3.8), 52)
+	center_sign = _sign(world, Vector3(0, 0.15, 3.16), 26)
 	center_sign.text = "等待比赛开始"
 	hover_frame = Node3D.new()
 	world.add_child(hover_frame)
@@ -198,7 +200,7 @@ func _box(parent: Node3D, dimensions: Vector3, center: Vector3, color: Color) ->
 
 func _seat_center(seat: int) -> Vector3:
 	var cell: int = SEATS[seat]
-	return Vector3((cell % 3 - 1) * 8.0, 0, (cell / 3 - 1) * 8.0)
+	return Vector3((cell % 3 - 1) * BOARD_SIZE, 0, (cell / 3 - 1) * BOARD_SIZE)
 
 func _slot_center(slot: int) -> Vector3:
 	return Vector3((slot % 3 - 1) * 2.0, TILE_HEIGHT, (slot / 3 - 1) * 2.0)
@@ -212,10 +214,12 @@ func _update_camera() -> void:
 	if local_seat >= 0:
 		focus = Vector3.ZERO.lerp(_seat_center(local_seat), zoom_value)
 	var pitch: float = deg_to_rad(lerpf(52.0, 88.0, zoom_value))
-	camera.position = focus + Vector3(0, sin(pitch), cos(pitch)) * 40.0
-	camera.look_at(focus)
 	var extent: float = lerpf(24.5, 8.5, zoom_value)
-	camera.size = maxf(extent, extent / (board.size.x / board.size.y))
+	var framed_extent: float = maxf(extent, extent / (board.size.x / board.size.y))
+	# Keep a fixed perspective lens; zoom moves the camera towards the board.
+	var distance: float = framed_extent / (2.0 * tan(deg_to_rad(camera.fov * 0.5)))
+	camera.position = focus + Vector3(0, sin(pitch), cos(pitch)) * distance
+	camera.look_at(focus)
 
 func _board_point(point: Vector2, height: float) -> Vector3:
 	var viewport_point: Vector2 = point * Vector2(board_view.size) / board.size
@@ -300,15 +304,15 @@ func _apply_view(data: Dictionary) -> void:
 	var heading: String = "第 %d / %d 轮" % [view.round, view.rounds]
 	match view.phase:
 		Match.Phase.PREPARE:
-			center_sign.text = "%s · 记忆 %d 秒\n中央是答案，准备开始" % [heading, seconds]
+			center_sign.text = "%s · 记忆 %d 秒" % [heading, seconds]
 		Match.Phase.PLAYING:
-			center_sign.text = "%s · 剩余 %d 秒\n首位完成后公开答案" % [heading, seconds]
+			center_sign.text = "%s · 剩余 %d 秒" % [heading, seconds]
 		Match.Phase.CLOSING:
-			center_sign.text = "%s · 结算倒计时 %d 秒\n中央答案已公开" % [heading, seconds]
+			center_sign.text = "%s · 结算 %d 秒" % [heading, seconds]
 		Match.Phase.INTERMISSION:
-			center_sign.text = "%s · 本轮结算\n%d 秒后开始下一轮" % [heading, seconds]
+			center_sign.text = "%s · %d 秒后下一轮" % [heading, seconds]
 		Match.Phase.FINISHED:
-			center_sign.text = "比赛结束 · 按总分排名\n同分并列"
+			center_sign.text = "比赛结束 · 按总分排名 · 同分并列"
 	for seat: int in players.size():
 		var row: Dictionary = view.players[seat]
 		var name_text: String = players[seat].name + ("（你）" if seat == local_seat else "")
@@ -322,7 +326,7 @@ func _apply_view(data: Dictionary) -> void:
 			progress = "本轮第 %d 名 +%d" % [result.rank, result.points] if not row.withdrawn else "已退出"
 		if view.phase == Match.Phase.FINISHED and not row.withdrawn:
 			progress = "总排名 第 %d 名" % view.rankings[seat].rank
-		nameplates[seat].text = "%s · %d 分\n%s" % [name_text, row.total, progress]
+		nameplates[seat].text = "%s · %d 分 · %s" % [name_text, row.total, progress]
 		for slot: int in 9:
 			var id: int = row.slots[slot]
 			var piece: PuzzlePiece = pieces[seat * 9 + id]
