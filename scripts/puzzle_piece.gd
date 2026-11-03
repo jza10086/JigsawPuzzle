@@ -1,26 +1,34 @@
 class_name PuzzlePiece
-extends Node2D
-var artwork: Texture2D
-var tile_id := 0
-var side := 100.0
-var gap := 5.0
-var lifted := false
+extends Node3D
+## A solid tile with one ninth of the shared illustration on its upper face.
 
-func _draw() -> void:
-	var edge := side - gap
-	var rect := Rect2(Vector2.ONE * -edge * 0.5, Vector2.ONE * edge)
-	if lifted:
-		draw_rect(rect.grow(5), Color(0.09, 0.23, 0.2, 0.17))
-		draw_rect(Rect2(rect.position + Vector2(2, 9), rect.size), Color(0.07, 0.19, 0.16, 0.22))
-		draw_rect(rect.grow(3), Color("f8ca68"))
-	if artwork:
-		var source_side := float(artwork.get_width()) / 3.0
-		var source := Rect2(Vector2(tile_id % 3, tile_id / 3) * source_side, Vector2.ONE * source_side)
-		draw_texture_rect_region(artwork, rect, source)
-	if gap > 0:
-		draw_rect(rect, Color(1, 1, 1, 0.22), false, 1.0)
+var artwork: Texture2D
+var tile_id: int = 0
+var side_material: StandardMaterial3D
+
+func _ready() -> void:
+	side_material = StandardMaterial3D.new()
+	side_material.albedo_color = Color("eee4cb")
+	side_material.roughness = 0.72
+	var body: MeshInstance3D = MeshInstance3D.new()
+	var box: BoxMesh = BoxMesh.new()
+	box.size = Vector3(1.96, 0.20, 1.96)
+	body.mesh = box
+	body.material_override = side_material
+	add_child(body)
+
+	var face: MeshInstance3D = MeshInstance3D.new()
+	var plane: PlaneMesh = PlaneMesh.new()
+	plane.size = Vector2(1.96, 1.96)
+	face.mesh = plane
+	face.position.y = 0.101
+	var material: StandardMaterial3D = StandardMaterial3D.new()
+	material.albedo_texture = artwork
+	material.uv1_scale = Vector3(1.0 / 3.0, 1.0 / 3.0, 1.0)
+	material.uv1_offset = Vector3(float(tile_id % 3) / 3.0, float(tile_id / 3) / 3.0, 0.0)
+	material.roughness = 0.9
+	face.material_override = material
+	add_child(face)
 
 func set_lifted(value: bool) -> void:
-	lifted = value
-	z_index = 20 if value else 0
-	queue_redraw()
+	side_material.albedo_color = Color("efbd59") if value else Color("eee4cb")

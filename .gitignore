@@ -1,4 +1,5 @@
 .godot/
+tmp/
 qa/*.log
 qa/*.png
 qa/*.mp4
