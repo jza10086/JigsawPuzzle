@@ -1,0 +1,11 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: zh_Hans\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "拾光拼图"
+msgstr "拾光拼图"
+
+msgid "观察花园图案，再交换和旋转拼块。恢复九块的正确位置与方向后按用时和操作次数结算。"
+msgstr "观察花园图案，再交换和旋转拼块。恢复九块的正确位置与方向后按用时和操作次数结算。"

@@ -23,7 +23,16 @@
         "min_api_minor": 0
       },
       "config_schema": "settings.gd",
-  "entry": "adapter.gd"
+      "entry": "adapter.gd"
     }
-  ]
+  ],
+  "localization": {
+    "supported_locales": [
+      "zh_Hans"
+    ],
+    "fallback_locale": "zh_Hans",
+    "translations": {
+      "zh_Hans": "i18n/zh_Hans.po"
+    }
+  }
 }
