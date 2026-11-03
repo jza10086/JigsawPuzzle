@@ -32,8 +32,10 @@ var seats: Array[Node3D] = []
 var nameplates: Array[Label3D] = []
 var answer: Node3D
 var center_sign: Label3D
-var board: SubViewportContainer
-var board_view: SubViewport
+var board: Control
+var board_view: Viewport
+var graphics_world: WorldEnvironment
+var graphics_sun: DirectionalLight3D
 var world: Node3D
 var camera: Camera3D
 var hover_frame: Node3D
@@ -78,16 +80,14 @@ func stop_match() -> void:
 	set_process(false)
 
 func _create_view() -> void:
-	board = SubViewportContainer.new()
-	board.stretch = true
+	board = Control.new()
 	board.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	board.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	board.gui_input.connect(_board_input)
 	add_child(board)
-	board_view = SubViewport.new()
-	board_view.own_world_3d = true
-	board_view.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	board.add_child(board_view)
+	# Render in the activity viewport so the protocol's graphics runtime owns
+	# MSAA, render scale and effects on the viewport that actually draws the game.
+	board_view = get_viewport()
 	var controls: Label = Label.new()
 	controls.name = "Controls"
 	controls.text = "左键：抬起 / 放下 / 交换\n右键：顺时针旋转 90°\n滚轮：缩放 · 靠近自己的棋盘"
@@ -109,7 +109,7 @@ func _create_view() -> void:
 func _create_world() -> void:
 	world = Node3D.new()
 	world.name = "SharedPuzzleTable"
-	board_view.add_child(world)
+	board.add_child(world)
 	var environment_node: WorldEnvironment = WorldEnvironment.new()
 	var environment: Environment = Environment.new()
 	environment.background_mode = Environment.BG_COLOR
@@ -119,12 +119,14 @@ func _create_world() -> void:
 	environment.ambient_light_energy = 0.25
 	environment_node.environment = environment
 	world.add_child(environment_node)
+	graphics_world = environment_node
 	var light: DirectionalLight3D = DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-58, -28, 0)
 	light.light_color = Color("fff4df")
 	light.light_energy = 0.35
 	light.shadow_enabled = true
 	world.add_child(light)
+	graphics_sun = light
 	camera = Camera3D.new()
 	camera.projection = Camera3D.PROJECTION_PERSPECTIVE
 	camera.fov = 50.0
@@ -163,6 +165,9 @@ func _create_world() -> void:
 		_box(hover_frame, Vector3(0.035, 0.025, 1.98), Vector3(offset, 0, 0), Color("efbd59"))
 		_box(hover_frame, Vector3(1.98, 0.025, 0.035), Vector3(0, 0, offset), Color("efbd59"))
 	hover_frame.visible = false
+
+func godot_party_graphics_targets() -> Dictionary:
+	return {"world": graphics_world, "sun": graphics_sun, "materials_root": world}
 
 func _piece(parent: Node3D, tile: int) -> PuzzlePiece:
 	var piece: PuzzlePiece = Piece.new()
@@ -213,7 +218,7 @@ func _update_camera() -> void:
 	var focus: Vector3 = Vector3.ZERO
 	if local_seat >= 0:
 		focus = Vector3.ZERO.lerp(_seat_center(local_seat), zoom_value)
-	var pitch: float = deg_to_rad(lerpf(52.0, 88.0, zoom_value))
+	var pitch: float = deg_to_rad(lerpf(68.0, 88.0, zoom_value))
 	var extent: float = lerpf(24.5, 8.5, zoom_value)
 	var framed_extent: float = maxf(extent, extent / (board.size.x / board.size.y))
 	# Keep a fixed perspective lens; zoom moves the camera towards the board.
@@ -222,7 +227,7 @@ func _update_camera() -> void:
 	camera.look_at(focus)
 
 func _board_point(point: Vector2, height: float) -> Vector3:
-	var viewport_point: Vector2 = point * Vector2(board_view.size) / board.size
+	var viewport_point: Vector2 = board.get_global_transform_with_canvas() * point
 	var origin: Vector3 = camera.project_ray_origin(viewport_point)
 	var direction: Vector3 = camera.project_ray_normal(viewport_point)
 	return origin + direction * ((height - origin.y) / direction.y)

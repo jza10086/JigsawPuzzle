@@ -3,11 +3,13 @@ extends Control
 ## only logical actions go to the host and only the host publishes board snapshots.
 const Gameplay: PackedScene = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/main.tscn")
 const GameScript: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/main.gd")
+const Pages: GDScript = preload("res://games/protocols/godot_party_default_protocol/round_pages.gd")
 const ACTION: StringName = &"jigsaw/action"
 const SNAPSHOT: StringName = &"jigsaw/state"
 var api: PartyAPI
 var request: Dictionary
 var game: GameScript
+var pages: Pages
 var active: bool = false
 
 func party_setup(context: PartyAPI, config: Dictionary) -> void:
@@ -34,11 +36,18 @@ func _ready() -> void:
 	api.net.message_received.connect(_message)
 	api.players_changed.connect(_players_changed)
 	api.on_close(_close)
-	var error: Error = api.mark_ready()
+	pages = Pages.new()
+	var error: Error = pages.prepare(self, api, request, _start_gameplay)
 	if error != OK:
 		_fail("jigsaw_ready", error)
 
 func party_start() -> void:
+	pages.transport_started()
+
+func godot_party_graphics_targets() -> Dictionary:
+	return game.godot_party_graphics_targets()
+
+func _start_gameplay() -> void:
 	active = true
 	game.start_match()
 	_players_changed()
@@ -49,7 +58,7 @@ func _send_action(data: Dictionary) -> void:
 		_fail("jigsaw_action", error)
 
 func _broadcast(data: Dictionary) -> void:
-	var error: Error = api.net.broadcast(SNAPSHOT, data, false)
+	var error: Error = api.net.broadcast(SNAPSHOT, data)
 	if error != OK:
 		_fail("jigsaw_snapshot", error)
 
@@ -75,7 +84,7 @@ func _finish(result: Dictionary) -> void:
 	result["request_id"] = request.request_id
 	result["reason"] = "completed"
 	result["columns"] = [{"key": "score", "title": "总积分", "format": "integer"}]
-	var error: Error = api.finish(result)
+	var error: Error = pages.present(result)
 	if error != OK:
 		_fail("jigsaw_result", error)
 
