@@ -1,12 +1,748 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
+[ext_resource type="PackedScene" path="res://games/minigame/godot_party_default_jigsaw_puzzle/puzzle_piece.tscn" id="tile"]
 [ext_resource type="Script" path="res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/main.gd" id="1"]
+[ext_resource type="FontFile" path="res://games/minigame/godot_party_default_jigsaw_puzzle/assets/AtelierSans.otf" id="2_pr5cp"]
+[ext_resource type="Script" path="res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/puzzle_piece.gd" id="3_8d11c"]
+[ext_resource type="Texture2D" path="res://games/minigame/godot_party_default_jigsaw_puzzle/assets/garden.svg" id="4_n3ovg"]
 
-[node name="MemoryJigsaw" type="Control"]
+[sub_resource type="Environment" id="Environment_55syy"]
+background_mode = 1
+background_color = Color(0.89411765, 0.9137255, 0.8745098, 1)
+ambient_light_source = 2
+ambient_light_color = Color(1, 0.95686275, 0.8627451, 1)
+ambient_light_energy = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2hdmx"]
+albedo_color = Color(0.8509804, 0.88235295, 0.83137256, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_8wjjj"]
+size = Vector3(200, 0.2, 200)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_02qhc"]
+albedo_color = Color(0.7137255, 0.6039216, 0.44705883, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_1nypn"]
+size = Vector3(20.25, 0.35, 20.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m3aeg"]
+resource_local_to_scene = true
+albedo_color = Color(0.54509807, 0.59607846, 0.5411765, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_edmn0"]
+size = Vector3(6.65, 0.26, 6.65)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6mxam"]
+albedo_color = Color(0.3372549, 0.43137255, 0.35686275, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_janor"]
+size = Vector3(6.12, 0.04, 6.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eyrp8"]
+resource_local_to_scene = true
+albedo_color = Color(0.54509807, 0.59607846, 0.5411765, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_gxn20"]
+size = Vector3(6.65, 0.26, 6.65)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qt3g8"]
+albedo_color = Color(0.3372549, 0.43137255, 0.35686275, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_6byia"]
+size = Vector3(6.12, 0.04, 6.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h27cl"]
+resource_local_to_scene = true
+albedo_color = Color(0.54509807, 0.59607846, 0.5411765, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_mpwrr"]
+size = Vector3(6.65, 0.26, 6.65)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6n5u6"]
+albedo_color = Color(0.3372549, 0.43137255, 0.35686275, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_opygh"]
+size = Vector3(6.12, 0.04, 6.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tav2p"]
+resource_local_to_scene = true
+albedo_color = Color(0.54509807, 0.59607846, 0.5411765, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_lc6ry"]
+size = Vector3(6.65, 0.26, 6.65)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5tlbl"]
+albedo_color = Color(0.3372549, 0.43137255, 0.35686275, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_gnfw7"]
+size = Vector3(6.12, 0.04, 6.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fwrpg"]
+resource_local_to_scene = true
+albedo_color = Color(0.54509807, 0.59607846, 0.5411765, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_et2qx"]
+size = Vector3(6.65, 0.26, 6.65)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3xdfy"]
+albedo_color = Color(0.3372549, 0.43137255, 0.35686275, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_tsb5a"]
+size = Vector3(6.12, 0.04, 6.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ear3"]
+resource_local_to_scene = true
+albedo_color = Color(0.54509807, 0.59607846, 0.5411765, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_rqamu"]
+size = Vector3(6.65, 0.26, 6.65)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v50eh"]
+albedo_color = Color(0.3372549, 0.43137255, 0.35686275, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_u4vl0"]
+size = Vector3(6.12, 0.04, 6.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8cbiu"]
+resource_local_to_scene = true
+albedo_color = Color(0.54509807, 0.59607846, 0.5411765, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_glbv6"]
+size = Vector3(6.65, 0.26, 6.65)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5rhgw"]
+albedo_color = Color(0.3372549, 0.43137255, 0.35686275, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_2foxg"]
+size = Vector3(6.12, 0.04, 6.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_454of"]
+resource_local_to_scene = true
+albedo_color = Color(0.54509807, 0.59607846, 0.5411765, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_2mgkm"]
+size = Vector3(6.65, 0.26, 6.65)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3y43h"]
+albedo_color = Color(0.3372549, 0.43137255, 0.35686275, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_s5web"]
+size = Vector3(6.12, 0.04, 6.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p2u5s"]
+albedo_color = Color(0.8352941, 0.7019608, 0.43529412, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_hewkd"]
+size = Vector3(6.65, 0.26, 6.65)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a14uo"]
+albedo_color = Color(0.9372549, 0.7411765, 0.34901962, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_wudr5"]
+size = Vector3(0.035, 0.025, 1.98)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jphe0"]
+albedo_color = Color(0.9372549, 0.7411765, 0.34901962, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_metjj"]
+size = Vector3(1.98, 0.025, 0.035)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_45imj"]
+albedo_color = Color(0.9372549, 0.7411765, 0.34901962, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_gm6ql"]
+size = Vector3(0.035, 0.025, 1.98)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jk7g6"]
+albedo_color = Color(0.9372549, 0.7411765, 0.34901962, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_mja0h"]
+size = Vector3(1.98, 0.025, 0.035)
+
+[node name="MemoryJigsaw" type="Control" unique_id=1674980561]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("1")
+
+[node name="Board" type="Control" parent="." unique_id=1550556884]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_default_cursor_shape = 2
+
+[node name="GameHUD" type="CanvasLayer" parent="." unique_id=1750808611]
+layer = -2
+
+[node name="Controls" type="Label" parent="GameHUD" unique_id=164833163]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 28.0
+offset_top = 28.0
+offset_right = -28.0
+offset_bottom = -28.0
+theme_override_colors/font_color = Color(0.14117648, 0.29411766, 0.25882354, 1)
+theme_override_colors/font_outline_color = Color(0.9607843, 0.9490196, 0.9137255, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("2_pr5cp")
+theme_override_font_sizes/font_size = 22
+text = "左键：抬起 / 放下 / 交换
+右键：顺时针旋转 90°
+滚轮：缩放 · 靠近自己的棋盘
+Esc：菜单"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="World" type="Node3D" parent="." unique_id=530065004]
+unique_name_in_owner = true
+
+[node name="GraphicsWorld" type="WorldEnvironment" parent="World" unique_id=970166322]
+unique_name_in_owner = true
+environment = SubResource("Environment_55syy")
+
+[node name="GraphicsSun" type="DirectionalLight3D" parent="World" unique_id=1520194059]
+unique_name_in_owner = true
+transform = Transform3D(0.88294756, 0.39813447, -0.24878204, 0, 0.52991927, 0.8480481, 0.46947157, -0.748782, 0.46789092, 0, 0, 0)
+light_color = Color(1, 0.95686275, 0.8745098, 1)
+light_energy = 0.35
+shadow_enabled = true
+
+[node name="Camera" type="Camera3D" parent="World" unique_id=364238968]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.37460652, 0.92718387, 0, -0.92718387, 0.37460652, 0, 24.357315, 9.840994)
+current = true
+fov = 50.0
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="World" unique_id=1041950932]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8, 0)
+material_override = SubResource("StandardMaterial3D_2hdmx")
+mesh = SubResource("BoxMesh_8wjjj")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="World" unique_id=817161758]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.42, 0)
+material_override = SubResource("StandardMaterial3D_02qhc")
+mesh = SubResource("BoxMesh_1nypn")
+
+[node name="Seat1" type="Node3D" parent="World" unique_id=828611421]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.65, 0, -6.65)
+
+[node name="Border" type="MeshInstance3D" parent="World/Seat1" unique_id=2030888972]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)
+material_override = SubResource("StandardMaterial3D_m3aeg")
+mesh = SubResource("BoxMesh_edmn0")
+
+[node name="Surface" type="MeshInstance3D" parent="World/Seat1" unique_id=323545213]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+material_override = SubResource("StandardMaterial3D_6mxam")
+mesh = SubResource("BoxMesh_janor")
+
+[node name="Nameplate" type="Label3D" parent="World/Seat1" unique_id=2112027640]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.15, 3.16)
+pixel_size = 0.01
+modulate = Color(0.14117648, 0.29411766, 0.25882354, 1)
+outline_modulate = Color(0.9607843, 0.9490196, 0.9137255, 1)
+text = "空位"
+font = ExtResource("2_pr5cp")
+font_size = 26
+outline_size = 8
+
+[node name="Slots" type="Node3D" parent="World/Seat1" unique_id=335287094]
+
+[node name="Slot0" type="Marker3D" parent="World/Seat1/Slots" unique_id=536078185]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, -2)
+
+[node name="Slot1" type="Marker3D" parent="World/Seat1/Slots" unique_id=1239034874]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -2)
+
+[node name="Slot2" type="Marker3D" parent="World/Seat1/Slots" unique_id=1981886810]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, -2)
+
+[node name="Slot3" type="Marker3D" parent="World/Seat1/Slots" unique_id=2013864717]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 0)
+
+[node name="Slot4" type="Marker3D" parent="World/Seat1/Slots" unique_id=1803900880]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+
+[node name="Slot5" type="Marker3D" parent="World/Seat1/Slots" unique_id=1002387533]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 0)
+
+[node name="Slot6" type="Marker3D" parent="World/Seat1/Slots" unique_id=1279088792]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 2)
+
+[node name="Slot7" type="Marker3D" parent="World/Seat1/Slots" unique_id=325660078]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 2)
+
+[node name="Slot8" type="Marker3D" parent="World/Seat1/Slots" unique_id=1582623915]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 2)
+
+[node name="Seat2" type="Node3D" parent="World" unique_id=2087492966]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.65)
+
+[node name="Border" type="MeshInstance3D" parent="World/Seat2" unique_id=1048592644]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)
+material_override = SubResource("StandardMaterial3D_eyrp8")
+mesh = SubResource("BoxMesh_gxn20")
+
+[node name="Surface" type="MeshInstance3D" parent="World/Seat2" unique_id=703122294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+material_override = SubResource("StandardMaterial3D_qt3g8")
+mesh = SubResource("BoxMesh_6byia")
+
+[node name="Nameplate" type="Label3D" parent="World/Seat2" unique_id=1964982114]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.15, 3.16)
+pixel_size = 0.01
+modulate = Color(0.14117648, 0.29411766, 0.25882354, 1)
+outline_modulate = Color(0.9607843, 0.9490196, 0.9137255, 1)
+text = "空位"
+font = ExtResource("2_pr5cp")
+font_size = 26
+outline_size = 8
+
+[node name="Slots" type="Node3D" parent="World/Seat2" unique_id=747476474]
+
+[node name="Slot0" type="Marker3D" parent="World/Seat2/Slots" unique_id=14113289]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, -2)
+
+[node name="Slot1" type="Marker3D" parent="World/Seat2/Slots" unique_id=193733599]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -2)
+
+[node name="Slot2" type="Marker3D" parent="World/Seat2/Slots" unique_id=1960193411]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, -2)
+
+[node name="Slot3" type="Marker3D" parent="World/Seat2/Slots" unique_id=1495731190]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 0)
+
+[node name="Slot4" type="Marker3D" parent="World/Seat2/Slots" unique_id=2094621503]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+
+[node name="Slot5" type="Marker3D" parent="World/Seat2/Slots" unique_id=567128497]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 0)
+
+[node name="Slot6" type="Marker3D" parent="World/Seat2/Slots" unique_id=339725122]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 2)
+
+[node name="Slot7" type="Marker3D" parent="World/Seat2/Slots" unique_id=1831427205]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 2)
+
+[node name="Slot8" type="Marker3D" parent="World/Seat2/Slots" unique_id=1895062365]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 2)
+
+[node name="Seat3" type="Node3D" parent="World" unique_id=1818825176]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.65, 0, -6.65)
+
+[node name="Border" type="MeshInstance3D" parent="World/Seat3" unique_id=1087724952]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)
+material_override = SubResource("StandardMaterial3D_h27cl")
+mesh = SubResource("BoxMesh_mpwrr")
+
+[node name="Surface" type="MeshInstance3D" parent="World/Seat3" unique_id=1501727100]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+material_override = SubResource("StandardMaterial3D_6n5u6")
+mesh = SubResource("BoxMesh_opygh")
+
+[node name="Nameplate" type="Label3D" parent="World/Seat3" unique_id=1283061411]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.15, 3.16)
+pixel_size = 0.01
+modulate = Color(0.14117648, 0.29411766, 0.25882354, 1)
+outline_modulate = Color(0.9607843, 0.9490196, 0.9137255, 1)
+text = "空位"
+font = ExtResource("2_pr5cp")
+font_size = 26
+outline_size = 8
+
+[node name="Slots" type="Node3D" parent="World/Seat3" unique_id=126941617]
+
+[node name="Slot0" type="Marker3D" parent="World/Seat3/Slots" unique_id=10248255]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, -2)
+
+[node name="Slot1" type="Marker3D" parent="World/Seat3/Slots" unique_id=818553053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -2)
+
+[node name="Slot2" type="Marker3D" parent="World/Seat3/Slots" unique_id=1672173381]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, -2)
+
+[node name="Slot3" type="Marker3D" parent="World/Seat3/Slots" unique_id=1921427193]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 0)
+
+[node name="Slot4" type="Marker3D" parent="World/Seat3/Slots" unique_id=122068333]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+
+[node name="Slot5" type="Marker3D" parent="World/Seat3/Slots" unique_id=86079764]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 0)
+
+[node name="Slot6" type="Marker3D" parent="World/Seat3/Slots" unique_id=1267387568]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 2)
+
+[node name="Slot7" type="Marker3D" parent="World/Seat3/Slots" unique_id=723940619]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 2)
+
+[node name="Slot8" type="Marker3D" parent="World/Seat3/Slots" unique_id=1325182763]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 2)
+
+[node name="Seat4" type="Node3D" parent="World" unique_id=463868108]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.65, 0, 0)
+
+[node name="Border" type="MeshInstance3D" parent="World/Seat4" unique_id=1291931386]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)
+material_override = SubResource("StandardMaterial3D_tav2p")
+mesh = SubResource("BoxMesh_lc6ry")
+
+[node name="Surface" type="MeshInstance3D" parent="World/Seat4" unique_id=780446445]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+material_override = SubResource("StandardMaterial3D_5tlbl")
+mesh = SubResource("BoxMesh_gnfw7")
+
+[node name="Nameplate" type="Label3D" parent="World/Seat4" unique_id=1229600406]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.15, 3.16)
+pixel_size = 0.01
+modulate = Color(0.14117648, 0.29411766, 0.25882354, 1)
+outline_modulate = Color(0.9607843, 0.9490196, 0.9137255, 1)
+text = "空位"
+font = ExtResource("2_pr5cp")
+font_size = 26
+outline_size = 8
+
+[node name="Slots" type="Node3D" parent="World/Seat4" unique_id=1871128687]
+
+[node name="Slot0" type="Marker3D" parent="World/Seat4/Slots" unique_id=958662132]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, -2)
+
+[node name="Slot1" type="Marker3D" parent="World/Seat4/Slots" unique_id=1285258827]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -2)
+
+[node name="Slot2" type="Marker3D" parent="World/Seat4/Slots" unique_id=1127478042]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, -2)
+
+[node name="Slot3" type="Marker3D" parent="World/Seat4/Slots" unique_id=1461900260]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 0)
+
+[node name="Slot4" type="Marker3D" parent="World/Seat4/Slots" unique_id=533834592]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+
+[node name="Slot5" type="Marker3D" parent="World/Seat4/Slots" unique_id=396263757]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 0)
+
+[node name="Slot6" type="Marker3D" parent="World/Seat4/Slots" unique_id=1600296513]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 2)
+
+[node name="Slot7" type="Marker3D" parent="World/Seat4/Slots" unique_id=361820331]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 2)
+
+[node name="Slot8" type="Marker3D" parent="World/Seat4/Slots" unique_id=1099530017]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 2)
+
+[node name="Seat5" type="Node3D" parent="World" unique_id=678578114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.65, 0, 0)
+
+[node name="Border" type="MeshInstance3D" parent="World/Seat5" unique_id=56348749]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)
+material_override = SubResource("StandardMaterial3D_fwrpg")
+mesh = SubResource("BoxMesh_et2qx")
+
+[node name="Surface" type="MeshInstance3D" parent="World/Seat5" unique_id=568764825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+material_override = SubResource("StandardMaterial3D_3xdfy")
+mesh = SubResource("BoxMesh_tsb5a")
+
+[node name="Nameplate" type="Label3D" parent="World/Seat5" unique_id=1694651573]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.15, 3.16)
+pixel_size = 0.01
+modulate = Color(0.14117648, 0.29411766, 0.25882354, 1)
+outline_modulate = Color(0.9607843, 0.9490196, 0.9137255, 1)
+text = "空位"
+font = ExtResource("2_pr5cp")
+font_size = 26
+outline_size = 8
+
+[node name="Slots" type="Node3D" parent="World/Seat5" unique_id=1261505995]
+
+[node name="Slot0" type="Marker3D" parent="World/Seat5/Slots" unique_id=1790660532]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, -2)
+
+[node name="Slot1" type="Marker3D" parent="World/Seat5/Slots" unique_id=1192067678]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -2)
+
+[node name="Slot2" type="Marker3D" parent="World/Seat5/Slots" unique_id=983109244]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, -2)
+
+[node name="Slot3" type="Marker3D" parent="World/Seat5/Slots" unique_id=1399127054]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 0)
+
+[node name="Slot4" type="Marker3D" parent="World/Seat5/Slots" unique_id=695187095]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+
+[node name="Slot5" type="Marker3D" parent="World/Seat5/Slots" unique_id=579637145]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 0)
+
+[node name="Slot6" type="Marker3D" parent="World/Seat5/Slots" unique_id=1996887040]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 2)
+
+[node name="Slot7" type="Marker3D" parent="World/Seat5/Slots" unique_id=1331635988]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 2)
+
+[node name="Slot8" type="Marker3D" parent="World/Seat5/Slots" unique_id=1237972062]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 2)
+
+[node name="Seat6" type="Node3D" parent="World" unique_id=408677507]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.65, 0, 6.65)
+
+[node name="Border" type="MeshInstance3D" parent="World/Seat6" unique_id=237417934]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)
+material_override = SubResource("StandardMaterial3D_8ear3")
+mesh = SubResource("BoxMesh_rqamu")
+
+[node name="Surface" type="MeshInstance3D" parent="World/Seat6" unique_id=1336233090]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+material_override = SubResource("StandardMaterial3D_v50eh")
+mesh = SubResource("BoxMesh_u4vl0")
+
+[node name="Nameplate" type="Label3D" parent="World/Seat6" unique_id=2098134642]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.15, 3.16)
+pixel_size = 0.01
+modulate = Color(0.14117648, 0.29411766, 0.25882354, 1)
+outline_modulate = Color(0.9607843, 0.9490196, 0.9137255, 1)
+text = "空位"
+font = ExtResource("2_pr5cp")
+font_size = 26
+outline_size = 8
+
+[node name="Slots" type="Node3D" parent="World/Seat6" unique_id=1777101884]
+
+[node name="Slot0" type="Marker3D" parent="World/Seat6/Slots" unique_id=1876053153]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, -2)
+
+[node name="Slot1" type="Marker3D" parent="World/Seat6/Slots" unique_id=13928100]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -2)
+
+[node name="Slot2" type="Marker3D" parent="World/Seat6/Slots" unique_id=809067022]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, -2)
+
+[node name="Slot3" type="Marker3D" parent="World/Seat6/Slots" unique_id=1074813733]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 0)
+
+[node name="Slot4" type="Marker3D" parent="World/Seat6/Slots" unique_id=1759390125]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+
+[node name="Slot5" type="Marker3D" parent="World/Seat6/Slots" unique_id=1906055502]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 0)
+
+[node name="Slot6" type="Marker3D" parent="World/Seat6/Slots" unique_id=1252038500]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 2)
+
+[node name="Slot7" type="Marker3D" parent="World/Seat6/Slots" unique_id=1435287248]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 2)
+
+[node name="Slot8" type="Marker3D" parent="World/Seat6/Slots" unique_id=2000125173]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 2)
+
+[node name="Seat7" type="Node3D" parent="World" unique_id=347672013]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.65)
+
+[node name="Border" type="MeshInstance3D" parent="World/Seat7" unique_id=1286874394]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)
+material_override = SubResource("StandardMaterial3D_8cbiu")
+mesh = SubResource("BoxMesh_glbv6")
+
+[node name="Surface" type="MeshInstance3D" parent="World/Seat7" unique_id=1058050539]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+material_override = SubResource("StandardMaterial3D_5rhgw")
+mesh = SubResource("BoxMesh_2foxg")
+
+[node name="Nameplate" type="Label3D" parent="World/Seat7" unique_id=370052221]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.15, 3.16)
+pixel_size = 0.01
+modulate = Color(0.14117648, 0.29411766, 0.25882354, 1)
+outline_modulate = Color(0.9607843, 0.9490196, 0.9137255, 1)
+text = "空位"
+font = ExtResource("2_pr5cp")
+font_size = 26
+outline_size = 8
+
+[node name="Slots" type="Node3D" parent="World/Seat7" unique_id=1281199831]
+
+[node name="Slot0" type="Marker3D" parent="World/Seat7/Slots" unique_id=1848249242]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, -2)
+
+[node name="Slot1" type="Marker3D" parent="World/Seat7/Slots" unique_id=410373554]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -2)
+
+[node name="Slot2" type="Marker3D" parent="World/Seat7/Slots" unique_id=1535374901]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, -2)
+
+[node name="Slot3" type="Marker3D" parent="World/Seat7/Slots" unique_id=960473759]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 0)
+
+[node name="Slot4" type="Marker3D" parent="World/Seat7/Slots" unique_id=1381099096]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+
+[node name="Slot5" type="Marker3D" parent="World/Seat7/Slots" unique_id=654272510]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 0)
+
+[node name="Slot6" type="Marker3D" parent="World/Seat7/Slots" unique_id=1518335893]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 2)
+
+[node name="Slot7" type="Marker3D" parent="World/Seat7/Slots" unique_id=1739461495]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 2)
+
+[node name="Slot8" type="Marker3D" parent="World/Seat7/Slots" unique_id=537444132]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 2)
+
+[node name="Seat8" type="Node3D" parent="World" unique_id=1992287864]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.65, 0, 6.65)
+
+[node name="Border" type="MeshInstance3D" parent="World/Seat8" unique_id=1232290995]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)
+material_override = SubResource("StandardMaterial3D_454of")
+mesh = SubResource("BoxMesh_2mgkm")
+
+[node name="Surface" type="MeshInstance3D" parent="World/Seat8" unique_id=1906889952]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+material_override = SubResource("StandardMaterial3D_3y43h")
+mesh = SubResource("BoxMesh_s5web")
+
+[node name="Nameplate" type="Label3D" parent="World/Seat8" unique_id=902801439]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.15, 3.16)
+pixel_size = 0.01
+modulate = Color(0.14117648, 0.29411766, 0.25882354, 1)
+outline_modulate = Color(0.9607843, 0.9490196, 0.9137255, 1)
+text = "空位"
+font = ExtResource("2_pr5cp")
+font_size = 26
+outline_size = 8
+
+[node name="Slots" type="Node3D" parent="World/Seat8" unique_id=394900909]
+
+[node name="Slot0" type="Marker3D" parent="World/Seat8/Slots" unique_id=1499844223]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, -2)
+
+[node name="Slot1" type="Marker3D" parent="World/Seat8/Slots" unique_id=1415058849]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -2)
+
+[node name="Slot2" type="Marker3D" parent="World/Seat8/Slots" unique_id=1123383524]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, -2)
+
+[node name="Slot3" type="Marker3D" parent="World/Seat8/Slots" unique_id=2096524062]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 0)
+
+[node name="Slot4" type="Marker3D" parent="World/Seat8/Slots" unique_id=2106827097]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+
+[node name="Slot5" type="Marker3D" parent="World/Seat8/Slots" unique_id=778657294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 0)
+
+[node name="Slot6" type="Marker3D" parent="World/Seat8/Slots" unique_id=1727619748]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 2)
+
+[node name="Slot7" type="Marker3D" parent="World/Seat8/Slots" unique_id=1776113923]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 2)
+
+[node name="Slot8" type="Marker3D" parent="World/Seat8/Slots" unique_id=1920186714]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, 2)
+
+[node name="Answer" type="Node3D" parent="World" unique_id=1671053645]
+unique_name_in_owner = true
+
+[node name="MeshInstance3D15" type="MeshInstance3D" parent="World" unique_id=1803761645]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)
+material_override = SubResource("StandardMaterial3D_p2u5s")
+mesh = SubResource("BoxMesh_hewkd")
+
+[node name="CenterSign" type="Label3D" parent="World" unique_id=72723223]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.15, 3.16)
+pixel_size = 0.01
+modulate = Color(0.14117648, 0.29411766, 0.25882354, 1)
+outline_modulate = Color(0.9607843, 0.9490196, 0.9137255, 1)
+text = "第 2 / 5 轮 · 记忆 10 秒"
+font = ExtResource("2_pr5cp")
+font_size = 26
+outline_size = 8
+
+[node name="HoverFrame" type="Node3D" parent="World" unique_id=293475889]
+unique_name_in_owner = true
+visible = false
+
+[node name="MeshInstance3D1" type="MeshInstance3D" parent="World/HoverFrame" unique_id=151617350]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.98, 0, 0)
+material_override = SubResource("StandardMaterial3D_a14uo")
+mesh = SubResource("BoxMesh_wudr5")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="World/HoverFrame" unique_id=554158248]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.98)
+material_override = SubResource("StandardMaterial3D_jphe0")
+mesh = SubResource("BoxMesh_metjj")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="World/HoverFrame" unique_id=2043376098]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.98, 0, 0)
+material_override = SubResource("StandardMaterial3D_45imj")
+mesh = SubResource("BoxMesh_gm6ql")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="World/HoverFrame" unique_id=972616337]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.98)
+material_override = SubResource("StandardMaterial3D_jk7g6")
+mesh = SubResource("BoxMesh_mja0h")
+
+[node name="Tile0" parent="World/Answer" instance=ExtResource("tile")]
+position = Vector3(-2,0.1,-2)
+tile_id = 0
+
+[node name="Tile1" parent="World/Answer" instance=ExtResource("tile")]
+position = Vector3(0,0.1,-2)
+tile_id = 1
+
+[node name="Tile2" parent="World/Answer" instance=ExtResource("tile")]
+position = Vector3(2,0.1,-2)
+tile_id = 2
+
+[node name="Tile3" parent="World/Answer" instance=ExtResource("tile")]
+position = Vector3(-2,0.1,0)
+tile_id = 3
+
+[node name="Tile4" parent="World/Answer" instance=ExtResource("tile")]
+position = Vector3(0,0.1,0)
+tile_id = 4
+
+[node name="Tile5" parent="World/Answer" instance=ExtResource("tile")]
+position = Vector3(2,0.1,0)
+tile_id = 5
+
+[node name="Tile6" parent="World/Answer" instance=ExtResource("tile")]
+position = Vector3(-2,0.1,2)
+tile_id = 6
+
+[node name="Tile7" parent="World/Answer" instance=ExtResource("tile")]
+position = Vector3(0,0.1,2)
+tile_id = 7
+
+[node name="Tile8" parent="World/Answer" instance=ExtResource("tile")]
+position = Vector3(2,0.1,2)
+tile_id = 8

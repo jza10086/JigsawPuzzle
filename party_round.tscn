@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://42vvlqlyt5ny" path="res://games/minigame/godot_party_default_jigsaw_puzzle/party_round.gd" id="1_uooo2"]
 
+[ext_resource type="PackedScene" path="res://games/minigame/godot_party_default_jigsaw_puzzle/main.tscn" id="game"]
+
 [node name="JigsawMatch" type="Control" unique_id=144905790]
 layout_mode = 3
 anchors_preset = 15
@@ -10,3 +12,5 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_uooo2")
+
+[node name="Gameplay" parent="." instance=ExtResource("game")]

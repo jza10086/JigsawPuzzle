@@ -1,0 +1,33 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/puzzle_piece.gd" id="1_j2kth"]
+[ext_resource type="Texture2D" path="res://games/minigame/godot_party_default_jigsaw_puzzle/assets/garden.svg" id="2_d1bbq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bcjb5"]
+resource_local_to_scene = true
+albedo_color = Color(0.93333334, 0.89411765, 0.79607844, 1)
+roughness = 0.72
+
+[sub_resource type="BoxMesh" id="BoxMesh_r628k"]
+size = Vector3(1.96, 0.2, 1.96)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ebi6s"]
+resource_local_to_scene = true
+albedo_texture = ExtResource("2_d1bbq")
+roughness = 0.9
+uv1_scale = Vector3(0.33333334, 0.33333334, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_43bvs"]
+size = Vector2(1.96, 1.96)
+
+[node name="PuzzlePiece" type="Node3D" unique_id=1017459142]
+script = ExtResource("1_j2kth")
+
+[node name="Body" type="MeshInstance3D" parent="." unique_id=2060805448]
+material_override = SubResource("StandardMaterial3D_bcjb5")
+mesh = SubResource("BoxMesh_r628k")
+
+[node name="Face" type="MeshInstance3D" parent="." unique_id=1027665799]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.101, 0)
+material_override = SubResource("StandardMaterial3D_ebi6s")
+mesh = SubResource("PlaneMesh_43bvs")

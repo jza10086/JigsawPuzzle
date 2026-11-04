@@ -21,3 +21,18 @@ msgstr "连续小回合数"
 
 msgid "拼图比赛"
 msgstr "拼图比赛"
+
+msgid "hud.prepare"
+msgstr "第 {round} / {total} 轮 · 记忆 {time} 秒"
+
+msgid "hud.playing"
+msgstr "第 {round} / {total} 轮 · 剩余 {time} 秒"
+
+msgid "hud.closing"
+msgstr "第 {round} / {total} 轮 · 结算 {time} 秒"
+
+msgid "hud.intermission"
+msgstr "第 {round} / {total} 轮 · {time} 秒后下一轮"
+
+msgid "hud.player"
+msgstr "{player} · {score} 分 · {state}"
