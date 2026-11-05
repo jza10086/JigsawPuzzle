@@ -29,6 +29,7 @@ func party_setup(context: PartyAPI, config: Dictionary) -> void:
 	game.action_requested.connect(_send_action)
 	game.snapshot_ready.connect(_broadcast)
 	game.match_completed.connect(_finish)
+	game.picture_failed.connect(func(error: Error) -> void: _fail("jigsaw_pictures", error))
 
 func _ready() -> void:
 	add_to_group(&"party_minimal_hud")

@@ -2,6 +2,10 @@ extends RefCounted
 ## Host-only match rules. Times are monotonic milliseconds supplied by the caller.
 ## Each participant owns one puzzle; no client-supplied board or finish time is trusted.
 const Puzzle: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/puzzle_state.gd")
+const Pictures: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/picture_library.gd")
+var picture_counts: Dictionary[String, int] = Pictures.empty_counts()
+var played_pictures: Array[String] = []
+
 enum Phase { PREPARE, PLAYING, CLOSING, INTERMISSION, FINISHED }
 const PREPARE_MS: int = 5000
 const INTERMISSION_MS: int = 6000
@@ -42,6 +46,11 @@ func start(now: int) -> void:
 
 func _begin_round(now: int) -> void:
 	round_index += 1
+	var picture_rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	picture_rng.seed = seed_value + round_index * 65537
+	var picture: String = Pictures.choose(picture_counts, picture_rng)
+	picture_counts[picture] += 1
+	played_pictures.append(picture)
 	phase = Phase.PREPARE
 	phase_deadline = now + PREPARE_MS
 	round_rows.clear()
@@ -131,7 +140,7 @@ func _end_round(now: int, timed_out: bool) -> void:
 		totals[id] += points
 		boards[id].selected_slot = -1
 		round_rows.append({"player_id": id, "rank": rank_value, "points": points, "time": finished[id], "total": totals[id], "withdrawn": withdrawn[id]})
-	history.append({"round": round_index, "timed_out": timed_out, "rows": round_rows.duplicate(true)})
+	history.append({"round": round_index, "picture": played_pictures[-1], "timed_out": timed_out, "rows": round_rows.duplicate(true)})
 	phase = Phase.FINISHED if round_index == round_count else Phase.INTERMISSION
 	phase_deadline = now + INTERMISSION_MS
 
@@ -156,7 +165,7 @@ func snapshot(now: int) -> Dictionary:
 			"selected": puzzle.selected_slot, "operations": puzzle.operations, "time": finished[id],
 			"withdrawn": withdrawn[id], "total": totals[id]})
 	return {"revision": revision, "phase": phase, "round": round_index, "rounds": round_count,
-		"remaining_ms": maxi(0, phase_deadline - now), "players": rows,
+		"remaining_ms": maxi(0, phase_deadline - now), "players": rows, "pictures": played_pictures.duplicate(),
 		"round_rows": round_rows.duplicate(true), "rankings": rankings()}
 
 ## Host snapshots are external input too. Reject invalid identity/order or tile
@@ -169,6 +178,11 @@ static func valid_snapshot(data: Dictionary, player_ids: Array[String]) -> bool:
 		return false
 	if data.round < 1 or data.round > data.rounds or data.rounds > 10:
 		return false
+	if not data.get("pictures") is Array or data.pictures.size() != data.round:
+		return false
+	for picture: Variant in data.pictures:
+		if not picture is String or picture not in Pictures.IDS:
+			return false
 	if not data.get("players") is Array or data.players.size() != player_ids.size():
 		return false
 	for index: int in player_ids.size():

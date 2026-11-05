@@ -4,6 +4,10 @@ extends Control
 signal action_requested(data: Dictionary)
 signal snapshot_ready(data: Dictionary)
 signal match_completed(result: Dictionary)
+signal picture_failed(error: Error)
+
+const Pictures: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/picture_library.gd")
+var picture_stats: Pictures = Pictures.new()
 
 const Match: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/match_state.gd")
 const Settings: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/settings.gd")
@@ -88,6 +92,13 @@ func _ready() -> void:
 		start_match()
 
 func start_match() -> void:
+	var input_context: PartyInput = PartyInput.new() if party_input == null else party_input
+	var error: Error = picture_stats.open(input_context.storage_directory())
+	if error != OK:
+		_picture_error(error)
+		return
+	if is_host:
+		rules.picture_counts = picture_stats.counts.duplicate()
 	running = true
 	if is_host:
 		rules.start(Time.get_ticks_msec())
@@ -196,17 +207,40 @@ func _publish() -> void:
 	var snapshot: Dictionary = rules.snapshot(Time.get_ticks_msec())
 	# Local host state is trusted; remote snapshots enter through receive_snapshot.
 	_apply_view(snapshot)
-	snapshot_ready.emit(snapshot)
+	if running:
+		snapshot_ready.emit(snapshot)
 
 func receive_snapshot(data: Dictionary) -> bool:
 	if not Match.valid_snapshot(data, ids):
 		return false
 	if view.is_empty() or data.revision > view.revision:
+		if not view.is_empty() and (data.round < view.round or data.pictures.slice(0, view.round) != view.pictures):
+			return false
 		_apply_view(data)
 	return true
 
+func _picture_error(error: Error) -> void:
+	stop_match()
+	push_error("记忆拼图图画或统计读写失败：%s (%s)" % [error_string(error), picture_stats.path])
+	picture_failed.emit(error)
+
 func _apply_view(data: Dictionary) -> void:
 	var new_round: bool = view.is_empty() or data.round != view.round
+	if new_round:
+		var texture: Texture2D = load(Pictures.ASSET_ROOT.path_join(data.pictures[-1] + ".svg"))
+		if texture == null:
+			_picture_error(ERR_CANT_OPEN)
+			return
+		var previous_round: int = 0 if view.is_empty() else int(view.round)
+		var error: Error = picture_stats.record(data.pictures.slice(previous_round))
+		if error != OK:
+			_picture_error(error)
+			return
+		for piece: PuzzlePiece in pieces:
+			piece.face_material.albedo_texture = texture
+		for tile: int in 9:
+			var reference: PuzzlePiece = answer.get_node("Tile%d" % tile)
+			reference.face_material.albedo_texture = texture
 	view = data.duplicate(true)
 	answer.visible = view.phase != Match.Phase.PLAYING
 	var seconds: int = ceili(float(view.remaining_ms) / 1000.0)

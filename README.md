@@ -22,6 +22,7 @@ godot --path tmp/test/3d_preview --log-file "$PWD/tmp/test/preview.log"
 
 ## 玩法
 
+- **每轮选图**：从 11 张原创图画中抽取一张，所有玩家和中央参考使用同一张图。主机优先选择本机累计游玩次数最少的图画，最低次数相同时随机抽取；每个小回合进入准备阶段时计一次，取消后不扣回。
 - **每轮准备 5 秒**：中央显示答案，外围已打乱，不能操作。同轮所有玩家使用相同开局，不同轮使用新开局。
 - **左键**：选中一块，拼块随鼠标悬浮；点击原位放下，点击另一格交换并放下。点击棋盘外不改变选中状态。
 - **右键**：将自己的选中拼块沿桌面顺时针旋转 90°；未选中时不做任何操作。
@@ -37,6 +38,14 @@ godot --path tmp/test/3d_preview --log-file "$PWD/tmp/test/preview.log"
 
 房间规则在 `settings.gd` 声明：`duration=120`、`closing_duration=30`、`rounds=3`。时限边界不接受新完成：正好第 120 秒仍无人完成时先判超时；第 119.999 秒完成则得到完整 30 秒窗口。
 
+## 图库与游玩统计
+
+11 张图画位于 `assets/pictures/`：灯塔港湾（harbor）、云上旅行（balloons）、沙漠绿洲（desert）、雪村来信（snow）、森林蘑菇屋（forest）、星际漫游（space）、珊瑚宝藏（reef）、风车花田（windmill）、月夜小城（city）、午后茶室（tea）、山间列车（railway）。全部为本地原创 SVG，可继续编辑矢量图形；原 `garden.svg` 保留为编辑器静态预览，不参与随机池。
+
+每台主机和客机分别维护安装根目录下的 `minigame/godot_party_default_jigsaw_puzzle/config/picture_stats.json`，通过 `PartyInput.storage_directory()` 解析，开发资料槽自动隔离在 `tmp/test/profiles/<slot>/`。首次游玩从全零开始，进入首轮准备后创建文件。格式为 `{"version": 1, "plays": {"harbor": 0, ...}}`，包含全部 11 个固定图画 ID。
+
+抽图以当局主机的历史为准；客机只记录主机选出的图画，不独立抽取、不用主机次数覆盖自己的历史。同一局的每轮序列随快照发送，已处理的轮次不会重复计数；晚收到快照时补记尚未处理的轮次。双方原有次数不同，文件总数仍可不同。本机以后担任主机时，其本地记录会用于优先选图。统计通过临时文件写入后替换，读写失败或格式损坏会明确终止本局，不自动清零；统计不上传 Git。
+
 ## 项目结构
 
 ```text
@@ -44,9 +53,11 @@ main.tscn                  局部玩法场景
 party_round.gd/tscn        包内 PartyAPI 多人入口、身份映射和结果提交
 scripts/main.gd            大九宫格、相机缩放、状态视图和主机时钟
 scripts/match_state.gd     小回合、时限、权威操作、排名和累计分
+scripts/picture_library.gd 固定图库、最少次数随机抽取和本地统计文件
 scripts/puzzle_state.gd    独立可测试的状态模型
 scripts/puzzle_piece.gd    立体拼块、九分区贴图与选中材质
 assets/garden.svg          原创连续花园矢量插画
+assets/pictures/*.svg      正式比赛使用的 11 张原创矢量图画
 assets/AtelierSans.otf     随游戏精简打包的中文字体
 ```
 
@@ -54,7 +65,7 @@ assets/AtelierSans.otf     随游戏精简打包的中文字体
 
 规则和隔离视图测试位于本子仓 `tmp/test/`。完整框架测试位于 GodotParty 主工程 `tmp/test/jigsaw_framework/`，通过真实主菜单、大厅、协调器和 PartyAPI 驱动各客户端；测试和输出不随内容包提交。各工程的 `tmp/.gdignore` 排除临时内容扫描。
 
-本机当前检查：
+此前三维版本的隔离检查（图库更新以主工程检查为准）：
 
 - `check_match.gd`：实际逻辑操作求解、截止边界、平局、并列末名、三轮总分、断线、旧轮/重复消息和快照校验。
 - `check_network.gd`：一个观战主机与八个真实 ENet 客户端；只替换 PartyNet 传输边界，执行生产游戏的身份检查、操作处理、快照校验和显示更新，覆盖对方进度、首位完成、公开答案与断线。
@@ -68,10 +79,13 @@ godot --headless --path tmp/test/3d_preview --script res://check_network.gd --lo
 godot --path tmp/test/3d_preview --script res://capture_match.gd --log-file "$PWD/tmp/test/capture_match.log"
 ```
 
-上述局部规则和网络断言此前通过。完整框架的 1、4、8 人检查通过，使用独立本地客户端，只发送正常拼图操作，覆盖大厅 1–8 人范围、默认规则、准备同步、三轮累计分、标准结算、父游戏单次奖励和画质恢复。四人主机实际渲染及八区三档缩放的点击投影检查通过；本轮运行退出码为 0，无脚本或引擎错误。人工八人操作与跨机器/外网联机仍需人工验收。
+上述局部规则和网络断言此前通过。首次完整接入时的 1、4、8 人检查通过，覆盖大厅人数范围、默认规则、准备同步、三轮累计分、标准结算、父游戏单次奖励和画质恢复；当时四人主机渲染及八区三档缩放的点击投影检查通过。
+
+图库更新使用主工程 `tmp/test/jigsaw_framework/pictures.gd` 检查最少次数抽取、完整图库轮换、统计重读、损坏文件拒绝和快照图画 ID 校验；`gallery.gd` 在 1920×1080 检查全部图画。`run.py 2 --render-host` 运行真实主客机三轮，断言双方图画一致、各自历史保留、重复快照不重复计数、落盘结果与回合记录一致。相关断言通过，但框架日志存在原版协议缺少 `%` 翻译的错误，因此该次框架运行不属于无错误通过。人工八人操作与跨机器/外网联机仍需人工验收。
 
 ## 素材
 
+- `assets/pictures/` 为本项目原创的 11 张矢量插画，无外部素材依赖。
 - `assets/garden.svg` 为本项目原创矢量插画《花园小憩》，全部图形本地绘制，无第三方图片依赖。
 - `assets/icon.svg` 为本项目原创图标。
 - `assets/AtelierSans.otf` 为 Noto Sans CJK SC 的精简子集，遵循 SIL Open Font License 1.1，见 [`assets/FONT-LICENSE.txt`](assets/FONT-LICENSE.txt)。
