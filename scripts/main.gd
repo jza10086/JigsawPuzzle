@@ -11,7 +11,6 @@ var picture_stats: Pictures = Pictures.new()
 
 const Match: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/match_state.gd")
 const Settings: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/settings.gd")
-const BOARD_SIZE: float = 6.65
 const TILE_HEIGHT: float = 0.10
 const LIFT_HEIGHT: float = 0.75
 
@@ -47,6 +46,15 @@ var board_view: Viewport
 var zoom_target: float = 0.0
 var zoom_value: float = 0.0
 var follow_pointer: bool = true
+@export_group("Camera Zoom")
+## Far framing comes from the scene Camera's transform and FOV.
+@export_range(1.0, 89.0, 0.1) var close_pitch_degrees: float = 88.0
+@export_range(1.0, 30.0, 0.1) var close_extent: float = 8.5
+@export_range(0.01, 1.0, 0.01) var zoom_step: float = 0.125
+@export_range(1.0, 30.0, 0.1) var zoom_response: float = 10.0
+var _overview_distance: float
+var _overview_focus: Vector3
+var _overview_rotation: Vector3
 
 ## Called before insertion into the scene tree with the session's fixed seat order.
 func configure(roster: Array[Dictionary], my_id: String, host: bool, seed: int, settings: Dictionary) -> void:
@@ -63,14 +71,15 @@ func configure(roster: Array[Dictionary], my_id: String, host: bool, seed: int, 
 func _ready() -> void:
 	var preview: bool = not configured
 	if preview:
-		configure([{"player_id": "preview", "name": "本机玩家", "color": "#2962ff"}],
+		configure([{"player_id": "preview", "name": _hud_text(&"hud.preview_player"), "color": "#2962ff"}],
 			"preview", true, randi(), Settings.DEFAULTS)
 		action_requested.connect(func(data: Dictionary) -> void: submit_action(local_id, data))
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	board_view = get_viewport()
-	board.gui_input.connect(_board_input)
+	set_process(false)
+	$GameHUD.hide()
 	answer.hide()
-	center_sign.text = "等待比赛开始"
+	center_sign.text = _hud_text(&"hud.waiting")
 	for index: int in 8:
 		var area: Node3D = world.get_node("Seat%d" % (index + 1))
 		seats.append(area)
@@ -86,20 +95,22 @@ func _ready() -> void:
 			area.add_child(piece)
 			piece.position = _slot_center(index, tile)
 			pieces.append(piece)
-	board.resized.connect(_update_camera)
+	_overview_distance = camera.position.length()
+	_overview_focus = camera.position - camera.basis.z * _overview_distance
+	_overview_rotation = camera.rotation
 	_update_camera()
 	if preview:
 		start_match()
 
 func start_match() -> void:
-	var input_context: PartyInput = PartyInput.new() if party_input == null else party_input
-	var error: Error = picture_stats.open(input_context.storage_directory())
-	if error != OK:
-		_picture_error(error)
-		return
 	if is_host:
 		rules.picture_counts = picture_stats.counts.duplicate()
 	running = true
+	set_process(true)
+	board.mouse_filter = Control.MOUSE_FILTER_STOP
+	board.gui_input.connect(_board_input)
+	board.resized.connect(_update_camera)
+	$GameHUD.show()
 	if is_host:
 		rules.start(Time.get_ticks_msec())
 		_publish()
@@ -107,6 +118,16 @@ func start_match() -> void:
 func stop_match() -> void:
 	running = false
 	set_process(false)
+	zoom_target = zoom_value
+	if not is_node_ready():
+		return
+	hover_frame.hide()
+	$GameHUD.hide()
+	board.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if board.gui_input.is_connected(_board_input):
+		board.gui_input.disconnect(_board_input)
+	if board.resized.is_connected(_update_camera):
+		board.resized.disconnect(_update_camera)
 
 func godot_party_graphics_targets() -> Dictionary:
 	return {"world": graphics_world, "sun": graphics_sun, "materials_root": world}
@@ -117,24 +138,23 @@ func _seat_center(seat: int) -> Vector3:
 func _slot_center(seat: int, slot: int) -> Vector3:
 	return seats[seat].get_node("Slots").get_child(slot).position
 
-func _hud_text(key: StringName, values: Dictionary) -> String:
+func _hud_text(key: StringName, values: Dictionary = {}) -> String:
 	return DefaultText.get_message(key).format(values) if i18n == null else i18n.text(key, values)
 
-## Zero yaw keeps the whole board square to the camera. Zoom raises the pitch
-## towards top-down and moves the focus to the local seat, without an abrupt cut.
+## Capture the editor's far camera once; zoom retains its yaw/roll and approaches
+## the local seat. Near pitch and framing are explicit Inspector settings.
 func _update_camera() -> void:
-	if camera == null or board.size.y <= 0.0:
+	if board.size.y <= 0.0:
 		return
-	var focus: Vector3 = Vector3.ZERO
+	var focus: Vector3 = _overview_focus
 	if local_seat >= 0:
-		focus = Vector3.ZERO.lerp(_seat_center(local_seat), zoom_value)
-	var pitch: float = deg_to_rad(lerpf(68.0, 88.0, zoom_value))
-	var extent: float = lerpf(24.5, 8.5, zoom_value)
-	var framed_extent: float = maxf(extent, extent / (board.size.x / board.size.y))
-	# Keep a fixed perspective lens; zoom moves the camera towards the board.
-	var distance: float = framed_extent / (2.0 * tan(deg_to_rad(camera.fov * 0.5)))
-	camera.position = focus + Vector3(0, sin(pitch), cos(pitch)) * distance
-	camera.look_at(focus)
+		focus = focus.lerp(_seat_center(local_seat), zoom_value)
+	var pitch: float = lerpf(_overview_rotation.x, -deg_to_rad(close_pitch_degrees), zoom_value)
+	var near_distance: float = close_extent / (2.0 * tan(deg_to_rad(camera.fov * 0.5)))
+	var distance: float = lerpf(_overview_distance, near_distance, zoom_value)
+	distance = maxf(distance, distance / (board.size.x / board.size.y))
+	camera.rotation = Vector3(pitch, _overview_rotation.y, _overview_rotation.z)
+	camera.position = focus + camera.basis.z * distance
 
 func _board_point(point: Vector2, height: float) -> Vector3:
 	var viewport_point: Vector2 = board.get_global_transform_with_canvas() * point
@@ -154,15 +174,17 @@ func _point_to_slot(point: Vector2) -> int:
 	return -1
 
 func _board_input(event: InputEvent) -> void:
+	if not running:
+		return
 	if party_input != null and party_input.input_blocked:
 		return
 	if not event is InputEventMouseButton or not event.pressed:
 		return
 	match event.button_index:
 		MOUSE_BUTTON_WHEEL_UP:
-			zoom_target = clampf(zoom_target + 0.125, 0.0, 1.0)
+			zoom_target = clampf(zoom_target + zoom_step, 0.0, 1.0)
 		MOUSE_BUTTON_WHEEL_DOWN:
-			zoom_target = clampf(zoom_target - 0.125, 0.0, 1.0)
+			zoom_target = clampf(zoom_target - zoom_step, 0.0, 1.0)
 		MOUSE_BUTTON_LEFT:
 			var slot: int = _point_to_slot(event.position)
 			if slot >= 0:
@@ -255,20 +277,20 @@ func _apply_view(data: Dictionary) -> void:
 		Match.Phase.INTERMISSION:
 			center_sign.text = _hud_text(&"hud.intermission", values)
 		Match.Phase.FINISHED:
-			center_sign.text = "比赛结束 · 按总分排名 · 同分并列"
+			center_sign.text = _hud_text(&"hud.finished")
 	for seat: int in players.size():
 		var row: Dictionary = view.players[seat]
-		var name_text: String = players[seat].name + ("（你）" if seat == local_seat else "")
-		var progress: String = "未完成" if row.time < 0 else "%.2f 秒完成" % (float(row.time) / 1000.0)
+		var name_text: String = _hud_text(&"hud.local_player", {"player": players[seat].name}) if seat == local_seat else players[seat].name
+		var progress: String = _hud_text(&"hud.incomplete") if row.time < 0 else _hud_text(&"hud.completed", {"time": String.num(float(row.time) / 1000.0, 2)})
 		if row.withdrawn:
-			progress = "已退出"
+			progress = _hud_text(&"hud.withdrawn")
 		if view.phase == Match.Phase.PREPARE:
-			progress = "准备中"
+			progress = _hud_text(&"hud.preparing")
 		if not view.round_rows.is_empty():
 			var result: Dictionary = view.round_rows[seat]
-			progress = "本轮第 %d 名 +%d" % [result.rank, result.points] if not row.withdrawn else "已退出"
+			progress = _hud_text(&"hud.round_rank", {"rank": result.rank, "points": result.points}) if not row.withdrawn else _hud_text(&"hud.withdrawn")
 		if view.phase == Match.Phase.FINISHED and not row.withdrawn:
-			progress = "总排名 第 %d 名" % view.rankings[seat].rank
+			progress = _hud_text(&"hud.total_rank", {"rank": view.rankings[seat].rank})
 		nameplates[seat].text = _hud_text(&"hud.player", {"player": name_text, "score": row.total, "state": progress})
 		for slot: int in 9:
 			var id: int = row.slots[slot]
@@ -279,7 +301,7 @@ func _apply_view(data: Dictionary) -> void:
 				piece.rotation.y = -row.turns[id] * PI * 0.5
 
 func _process(delta: float) -> void:
-	zoom_value = lerpf(zoom_value, zoom_target, 1.0 - exp(-10.0 * delta))
+	zoom_value = lerpf(zoom_value, zoom_target, 1.0 - exp(-zoom_response * delta))
 	_update_camera()
 	if not running:
 		return
@@ -294,6 +316,7 @@ func _process(delta: float) -> void:
 		if rules.phase == Match.Phase.FINISHED and Time.get_ticks_msec() >= rules.phase_deadline and not result_emitted:
 			result_emitted = true
 			match_completed.emit({"rankings": rules.rankings(), "game_data": {"rounds": rules.history.duplicate(true)}})
+			return
 	if view.is_empty():
 		return
 	var pointer: Vector2 = board.get_local_mouse_position()

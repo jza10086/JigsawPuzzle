@@ -36,3 +36,36 @@ msgstr "第 {round} / {total} 轮 · {time} 秒后下一轮"
 
 msgid "hud.player"
 msgstr "{player} · {score} 分 · {state}"
+
+msgid "hud.preview_player"
+msgstr "本机玩家"
+
+msgid "hud.waiting"
+msgstr "等待比赛开始"
+
+msgid "hud.finished"
+msgstr "比赛结束 · 按总分排名 · 同分并列"
+
+msgid "hud.local_player"
+msgstr "{player}（你）"
+
+msgid "hud.incomplete"
+msgstr "未完成"
+
+msgid "hud.completed"
+msgstr "{time} 秒完成"
+
+msgid "hud.withdrawn"
+msgstr "已退出"
+
+msgid "hud.preparing"
+msgstr "准备中"
+
+msgid "hud.round_rank"
+msgstr "本轮第 {rank} 名 +{points}"
+
+msgid "hud.total_rank"
+msgstr "总排名 第 {rank} 名"
+
+msgid "result.score"
+msgstr "总积分"

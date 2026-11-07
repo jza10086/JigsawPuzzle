@@ -5,6 +5,7 @@ const IDS: Array[String] = ["harbor", "balloons", "desert", "snow", "forest", "s
 const ASSET_ROOT: String = "res://games/minigame/godot_party_default_jigsaw_puzzle/assets/pictures/"
 const STATS_PATH: String = "minigame/godot_party_default_jigsaw_puzzle/config/picture_stats.json"
 var counts: Dictionary[String, int] = empty_counts()
+## Empty until the formal entry explicitly opens persistent storage; F6 stays in memory.
 var path: String
 
 static func empty_counts() -> Dictionary[String, int]:
@@ -57,6 +58,9 @@ func record(pictures: Array) -> Error:
 	var next: Dictionary[String, int] = counts.duplicate()
 	for id: String in pictures:
 		next[id] += 1
+	if path.is_empty():
+		counts = next
+		return OK
 	var error: Error = DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 	if error != OK:
 		return error

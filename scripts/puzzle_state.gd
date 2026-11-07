@@ -2,13 +2,13 @@ class_name PuzzleState
 extends RefCounted
 ## Logical game state. Tile orientations are indexed by identity, never by slot.
 enum Phase { REVEAL, SHUFFLING, PLAYING, COMPLETE }
-const COUNT := 9
+const COUNT: int = 9
 var phase: Phase = Phase.REVEAL
 var slots: Array[int] = []
 var turns: Array[int] = []
-var selected_slot := -1
-var operations := 0
-var busy := false
+var selected_slot: int = -1
+var operations: int = 0
+var busy: bool = false
 
 func _init() -> void:
 	reset()
@@ -16,7 +16,7 @@ func _init() -> void:
 func reset() -> void:
 	slots.clear()
 	turns.clear()
-	for i in COUNT:
+	for i: int in COUNT:
 		slots.append(i)
 		turns.append(0)
 	selected_slot = -1
@@ -27,14 +27,14 @@ func reset() -> void:
 func shuffle_board(rng: RandomNumberGenerator) -> void:
 	reset()
 	phase = Phase.SHUFFLING
-	for i in range(COUNT - 1, 0, -1):
-		var j := rng.randi_range(0, i)
-		var temp := slots[i]
+	for i: int in range(COUNT - 1, 0, -1):
+		var j: int = rng.randi_range(0, i)
+		var temp: int = slots[i]
 		slots[i] = slots[j]
 		slots[j] = temp
 	# Both placement and orientation must change, even for adversarial RNG output.
-	var moved := false
-	for i in COUNT:
+	var moved: bool = false
+	for i: int in COUNT:
 		moved = moved or slots[i] != i
 		turns[i] = rng.randi_range(0, 3)
 	if not moved:
@@ -55,13 +55,13 @@ func click_slot(slot: int) -> Dictionary:
 	if selected_slot == -1:
 		selected_slot = slot
 		return {"kind": "pick", "slot": slot, "id": slots[slot]}
-	var source := selected_slot
-	var tile := slots[source]
+	var source: int = selected_slot
+	var tile: int = slots[source]
 	selected_slot = -1
 	busy = true
 	if source == slot:
 		return {"kind": "place", "slot": slot, "id": tile}
-	var other := slots[slot]
+	var other: int = slots[slot]
 	slots[source] = other
 	slots[slot] = tile
 	operations += 1
@@ -70,7 +70,7 @@ func click_slot(slot: int) -> Dictionary:
 func rotate_selected() -> int:
 	if phase != Phase.PLAYING or busy or selected_slot == -1:
 		return -1
-	var tile := slots[selected_slot]
+	var tile: int = slots[selected_slot]
 	turns[tile] = (turns[tile] + 1) % 4
 	operations += 1
 	busy = true
@@ -84,7 +84,7 @@ func settle() -> bool:
 	return false
 
 func is_solved() -> bool:
-	for i in COUNT:
+	for i: int in COUNT:
 		if slots[i] != i or turns[i] != 0:
 			return false
 	return true
@@ -92,9 +92,9 @@ func is_solved() -> bool:
 func invariant_holds() -> bool:
 	if slots.size() != COUNT or turns.size() != COUNT:
 		return false
-	var sorted := slots.duplicate()
+	var sorted: Array[int] = slots.duplicate()
 	sorted.sort()
-	for i in COUNT:
+	for i: int in COUNT:
 		if sorted[i] != i or turns[i] < 0 or turns[i] > 3:
 			return false
 	return selected_slot >= -1 and selected_slot < COUNT

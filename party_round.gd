@@ -3,6 +3,7 @@ extends Control
 ## only logical actions go to the host and only the host publishes board snapshots.
 const GameScript: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/main.gd")
 const Pages: GDScript = preload("res://games/protocols/godot_party_default_protocol/round_pages.gd")
+const Pictures: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/picture_library.gd")
 const ACTION: StringName = &"jigsaw/action"
 const SNAPSHOT: StringName = &"jigsaw/state"
 var api: PartyAPI
@@ -10,6 +11,7 @@ var request: Dictionary
 var game: GameScript
 var pages: Pages
 var active: bool = false
+var _closed: bool = false
 
 func party_setup(context: PartyAPI, config: Dictionary) -> void:
 	api = context
@@ -29,7 +31,7 @@ func party_setup(context: PartyAPI, config: Dictionary) -> void:
 	game.action_requested.connect(_send_action)
 	game.snapshot_ready.connect(_broadcast)
 	game.match_completed.connect(_finish)
-	game.picture_failed.connect(func(error: Error) -> void: _fail("jigsaw_pictures", error))
+	game.picture_failed.connect(_picture_failed)
 
 func _ready() -> void:
 	add_to_group(&"party_minimal_hud")
@@ -39,8 +41,15 @@ func _ready() -> void:
 	api.net.message_received.connect(_message)
 	api.players_changed.connect(_players_changed)
 	api.on_close(_close)
+	# Only the formal entry opts into local persistence; F6 owns memory-only counts.
+	var statistics: Pictures = Pictures.new()
+	var error: Error = statistics.open(api.input.storage_directory())
+	if error != OK:
+		_fail("jigsaw_pictures", error)
+		return
+	game.picture_stats = statistics
 	pages = Pages.new()
-	var error: Error = pages.prepare(self, api, request, _start_gameplay)
+	error = pages.prepare(self, api, request, _start_gameplay)
 	if error != OK:
 		_fail("jigsaw_ready", error)
 
@@ -51,16 +60,22 @@ func godot_party_graphics_targets() -> Dictionary:
 	return game.godot_party_graphics_targets()
 
 func _start_gameplay() -> void:
+	if _closed:
+		return
 	active = true
 	game.start_match()
 	_players_changed()
 
 func _send_action(data: Dictionary) -> void:
+	if not active:
+		return
 	var error: Error = api.net.send_to_host(ACTION, data)
 	if error != OK:
 		_fail("jigsaw_action", error)
 
 func _broadcast(data: Dictionary) -> void:
+	if not active:
+		return
 	var error: Error = api.net.broadcast(SNAPSHOT, data)
 	if error != OK:
 		_fail("jigsaw_snapshot", error)
@@ -86,14 +101,16 @@ func _finish(result: Dictionary) -> void:
 	game.stop_match()
 	result["request_id"] = request.request_id
 	result["reason"] = "completed"
-	result["columns"] = [{"key": "score", "title": "总积分", "format": "integer"}]
+	result["columns"] = [{"key": "score", "title": api.i18n.text(&"result.score"), "format": "integer"}]
 	var error: Error = pages.present(result)
 	if error != OK:
 		_fail("jigsaw_result", error)
 
+func _picture_failed(error: Error) -> void:
+	_fail("jigsaw_pictures", error)
+
 func _fail(code: String, error: Error) -> void:
-	active = false
-	game.stop_match()
+	_close()
 	var report_error: Error = api.fail(code, error_string(error))
 	if report_error != OK:
 		push_error("%s: %s; reporting failed: %s" % [code, error_string(error), error_string(report_error)])
@@ -102,8 +119,21 @@ func party_stop(_reason: StringName) -> void:
 	_close()
 
 func _close() -> void:
+	if _closed:
+		return
+	_closed = true
 	active = false
-	game.stop_match()
+	# A scope may close after setup but before ready has created its pages.
+	if game != null:
+		game.stop_match()
+		game.action_requested.disconnect(_send_action)
+		game.snapshot_ready.disconnect(_broadcast)
+		game.match_completed.disconnect(_finish)
+		game.picture_failed.disconnect(_picture_failed)
+	if pages != null:
+		pages.stop()
+	if api == null:
+		return
 	if api.net.message_received.is_connected(_message):
 		api.net.message_received.disconnect(_message)
 	if api.players_changed.is_connected(_players_changed):

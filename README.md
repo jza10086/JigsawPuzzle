@@ -2,7 +2,7 @@
 
 一个 **Godot 4.x / 3D / 1–8 人在线记忆拼图比赛**。大九宫格的外围八格分配给八个玩家，每格各有九块拼图；中央九块组成完整答案。人数不足八人时保留空位，不生成 AI。
 
-相机采用透视投影、固定 50° 视野，正对整个棋盘。远景采用 68° 俯角，滚轮通过移动相机缩近自己的区域，并逐渐转为 88° 俯视；缩远回到全局。小九宫格的底座边缘紧贴，标牌收进各自边框。所有客户端都能看到彼此的拼块位置、朝向、选中状态和完成成绩。
+相机采用透视投影，默认 50° 视野、68° 远景俯角，正对整个棋盘。远景构图直接读取场景 Camera 的位置、旋转和 FOV；近景俯角（默认 88°）、取景范围、滚轮步长和过渡速度在玩法根节点的 Camera Zoom Inspector 分组调整。滚轮移动相机并动态聚焦自己的区域；缩远回到编辑器保存的全局构图。小九宫格的底座边缘紧贴，标牌收进各自边框。所有客户端都能看到彼此的拼块位置、朝向、选中状态和完成成绩。
 
 玩家边框直接使用原版协议通过 `api.get_appearance(player_id).color` 给出的房间颜色，遵循协议的红、绿、蓝、亮青、紫、黄、黑、白八色及房主分配结果，不按座位另行分色。局部单人预览用协议默认蓝色；八人截图夹具使用协议八色。
 
@@ -12,13 +12,9 @@
 
 `party_round.tscn/gd` 使用 PartyAPI 注入名单、协议外观、房间规则、随机种子和消息通道，主机判定拼图、时间和成绩。玩法直接渲染到活动视口，通过 `godot_party_graphics_targets()` 接受原版协议的画质设置，关闭活动时由协议恢复视口设置。
 
-本次本机预览工程位于 `tmp/test/3d_preview/`（不提交、不随内容包发布）。在子仓目录运行：
+在主工程编辑器直接 F6 运行本包 `main.tscn`。预览只维护本次运行的内存统计，不创建 PartyInput，也不读取或写入正式图片次数；无需另建预览工程或更新资源副本。画面铺满窗口，右下角只显示操作说明；轮次、倒计时和积分显示在棋盘的 3D 标牌上。
 
-```powershell
-godot --path tmp/test/3d_preview --log-file "$PWD/tmp/test/preview.log"
-```
-
-预览工程使用本包的场景、脚本、settings.gd 和素材副本，没有复制框架代码；修改后需更新对应副本。使用系统 PATH 的 `godot`，本次版本为 4.7.2。画面铺满窗口，右下角只显示操作说明；轮次、倒计时和积分显示在棋盘的 3D 标牌上。
+停止玩法时显式停用处理和棋盘输入、隐藏操作 HUD 并解除视图监听；关闭入口时解除游戏及 PartyAPI 监听并关闭页面，重复停止不会重复清理。原版协议 `round_pages` 的整树禁用方式仍属共享清单 G01，需另行统一迁移。
 
 ## 玩法
 
@@ -42,7 +38,7 @@ godot --path tmp/test/3d_preview --log-file "$PWD/tmp/test/preview.log"
 
 11 张图画位于 `assets/pictures/`：灯塔港湾（harbor）、云上旅行（balloons）、沙漠绿洲（desert）、雪村来信（snow）、森林蘑菇屋（forest）、星际漫游（space）、珊瑚宝藏（reef）、风车花田（windmill）、月夜小城（city）、午后茶室（tea）、山间列车（railway）。全部为本地原创 SVG，可继续编辑矢量图形；原 `garden.svg` 保留为编辑器静态预览，不参与随机池。
 
-每台主机和客机分别维护安装根目录下的 `minigame/godot_party_default_jigsaw_puzzle/config/picture_stats.json`，通过 `PartyInput.storage_directory()` 解析，开发资料槽自动隔离在 `tmp/test/profiles/<slot>/`。首次游玩从全零开始，进入首轮准备后创建文件。格式为 `{"version": 1, "plays": {"harbor": 0, ...}}`，包含全部 11 个固定图画 ID。
+正式入口 `party_round.gd` 创建并打开统计对象后注入玩法；没有打开存储的统计对象只保存在内存中。每台主机和客机分别维护安装根目录下的 `minigame/godot_party_default_jigsaw_puzzle/config/picture_stats.json`，通过 `PartyInput.storage_directory()` 解析，开发资料槽自动隔离在 `tmp/test/profiles/<slot>/`。首次游玩从全零开始，进入首轮准备后创建文件。格式为 `{"version": 1, "plays": {"harbor": 0, ...}}`，包含全部 11 个固定图画 ID。
 
 抽图以当局主机的历史为准；客机只记录主机选出的图画，不独立抽取、不用主机次数覆盖自己的历史。同一局的每轮序列随快照发送，已处理的轮次不会重复计数；晚收到快照时补记尚未处理的轮次。双方原有次数不同，文件总数仍可不同。本机以后担任主机时，其本地记录会用于优先选图。统计通过临时文件写入后替换，读写失败或格式损坏会明确终止本局，不自动清零；统计不上传 Git。
 
@@ -63,25 +59,15 @@ assets/AtelierSans.otf     随游戏精简打包的中文字体
 
 ## 验证
 
-规则和隔离视图测试位于本子仓 `tmp/test/`。完整框架测试位于 GodotParty 主工程 `tmp/test/jigsaw_framework/`，通过真实主菜单、大厅、协调器和 PartyAPI 驱动各客户端；测试和输出不随内容包提交。各工程的 `tmp/.gdignore` 排除临时内容扫描。
+本次架构改造使用系统 PATH 的 Godot 4.7.2，在主工程 `tmp/test/jigsaw_framework/` 复用和补充针对性检查，测试及输出不随内容包提交：
 
-此前三维版本的隔离检查（图库更新以主工程检查为准）：
+- `preview_isolation.gd`：直接实例化未配置的 F6 场景并推进三轮，内存计数正确、既有持久化统计不变；验证编辑器相机/FOV 和近景参数生效、重复停止及停止后的输入断开。
+- `check_match.gd`：复用原规则检查，实际交换/旋转求解、截止边界、并列名次、三轮总分、断线和快照检查全部通过。
+- `check_network.gd`：复用一个旁观主机与八个 ENet 客户端检查，仅替换 PartyNet 传输边界，生产身份检查、进度、首位完成、答案公开和断线检查通过。
+- `run.py 2`：真实主菜单、大厅、协调器和 PartyAPI 的双端三轮检查通过，日志无脚本错误；双方图画一致、各自历史保留、重复快照不重复计数、落盘准确、最终奖励只提交一次，并验证入口重复停止后的信号和页面清理。
+- `capture.gd`：1920×1080 准备、比赛、缩放近景、结算倒计时截图及八席三档缩放点击定位通过；已查看远景与近景截图，棋盘和边缘操作说明保留。
 
-- `check_match.gd`：实际逻辑操作求解、截止边界、平局、并列末名、三轮总分、断线、旧轮/重复消息和快照校验。
-- `check_network.gd`：一个观战主机与八个真实 ENet 客户端；只替换 PartyNet 传输边界，执行生产游戏的身份检查、操作处理、快照校验和显示更新，覆盖对方进度、首位完成、公开答案与断线。
-- `capture_match.gd`：八区准备/比赛/结算视图、缩放近景，以及三档缩放的九格点击投影。
-
-旧单人版 `check_3d.gd/capture_3d.gd` 不再是当前验收入口。
-
-```powershell
-godot --headless --path tmp/test/3d_preview --script res://check_match.gd --log-file "$PWD/tmp/test/check_match.log"
-godot --headless --path tmp/test/3d_preview --script res://check_network.gd --log-file "$PWD/tmp/test/check_network.log"
-godot --path tmp/test/3d_preview --script res://capture_match.gd --log-file "$PWD/tmp/test/capture_match.log"
-```
-
-上述局部规则和网络断言此前通过。首次完整接入时的 1、4、8 人检查通过，覆盖大厅人数范围、默认规则、准备同步、三轮累计分、标准结算、父游戏单次奖励和画质恢复；当时四人主机渲染及八区三档缩放的点击投影检查通过。
-
-图库更新使用主工程 `tmp/test/jigsaw_framework/pictures.gd` 检查最少次数抽取、完整图库轮换、统计重读、损坏文件拒绝和快照图画 ID 校验；`gallery.gd` 在 1920×1080 检查全部图画。`run.py 2 --render-host` 运行真实主客机三轮，断言双方图画一致、各自历史保留、重复快照不重复计数、落盘结果与回合记录一致。相关断言通过，但框架日志存在原版协议缺少 `%` 翻译的错误，因此该次框架运行不属于无错误通过。人工八人操作与跨机器/外网联机仍需人工验收。
+此前完整接入的 1、4、8 人检查及图库检查属于历史证据，本轮未重复全套矩阵。人工八人操作、跨机器/外网联机及 G01 共享协议迁移后的验收仍待完成。
 
 ## 素材
 
