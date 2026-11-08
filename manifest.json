@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "core_api_major": 4,
-  "package_version": "1.2.0",
+  "package_version": "1.2.1",
   "id": "godot_party_default_jigsaw_puzzle",
   "name": "记忆拼图",
   "kind": "minigame",
@@ -12,7 +12,7 @@
   ],
   "introduction": "八人共享九宫格棋盘，外围各拼各的，中央展示记忆答案。首位完成后公开答案并倒计时30秒；两分钟无人完成则平局。默认三轮，按累计名次分结算。",
   "dependencies": {
-    "godot_party_default_protocol": "1.0.0"
+    "godot_party_default_protocol": "1.0.1"
   },
   "adapters": [
     {
