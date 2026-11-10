@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "core_api_major": 5,
-  "package_version": "1.2.7",
-  "id": "godot_party_default_jigsaw_puzzle",
+  "package_version": "1.2.8",
+  "id": "gp_jigsaw",
   "name": "记忆拼图",
   "kind": "minigame",
   "supported_systems": ["windows"],

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dtofa0aitnc3s"
-path="res://.godot/imported/railway.svg-c1dcdc823a2197fff3193e31b0586f0f.ctex"
+path="res://.godot/imported/railway.svg-5be993e60a1e3bdef9cdf053136a4586.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://games/minigame/godot_party_default_jigsaw_puzzle/assets/pictures/railway.svg"
-dest_files=["res://.godot/imported/railway.svg-c1dcdc823a2197fff3193e31b0586f0f.ctex"]
+source_file="res://games/minigame/gp_jigsaw/assets/pictures/railway.svg"
+dest_files=["res://.godot/imported/railway.svg-5be993e60a1e3bdef9cdf053136a4586.ctex"]
 
 [params]
 

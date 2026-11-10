@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bym3d8e6k78eh"
-path="res://.godot/imported/balloons.svg-07d86ff56c35cdfebc6f00719227d5ef.ctex"
+path="res://.godot/imported/balloons.svg-9ed0a7460089c4d119abc1fa3e06c165.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://games/minigame/godot_party_default_jigsaw_puzzle/assets/pictures/balloons.svg"
-dest_files=["res://.godot/imported/balloons.svg-07d86ff56c35cdfebc6f00719227d5ef.ctex"]
+source_file="res://games/minigame/gp_jigsaw/assets/pictures/balloons.svg"
+dest_files=["res://.godot/imported/balloons.svg-9ed0a7460089c4d119abc1fa3e06c165.ctex"]
 
 [params]
 

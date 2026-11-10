@@ -1,10 +1,10 @@
 [gd_scene format=3]
 
-[ext_resource type="PackedScene" path="res://games/minigame/godot_party_default_jigsaw_puzzle/puzzle_piece.tscn" id="tile"]
-[ext_resource type="Script" path="res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/main.gd" id="1"]
-[ext_resource type="FontFile" path="res://games/minigame/godot_party_default_jigsaw_puzzle/assets/AtelierSans.otf" id="2_pr5cp"]
-[ext_resource type="Script" path="res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/puzzle_piece.gd" id="3_8d11c"]
-[ext_resource type="Texture2D" path="res://games/minigame/godot_party_default_jigsaw_puzzle/assets/garden.svg" id="4_n3ovg"]
+[ext_resource type="PackedScene" path="res://games/minigame/gp_jigsaw/puzzle_piece.tscn" id="tile"]
+[ext_resource type="Script" path="res://games/minigame/gp_jigsaw/scripts/main.gd" id="1"]
+[ext_resource type="FontFile" path="res://games/minigame/gp_jigsaw/assets/AtelierSans.otf" id="2_pr5cp"]
+[ext_resource type="Script" path="res://games/minigame/gp_jigsaw/scripts/puzzle_piece.gd" id="3_8d11c"]
+[ext_resource type="Texture2D" path="res://games/minigame/gp_jigsaw/assets/garden.svg" id="4_n3ovg"]
 
 [sub_resource type="Environment" id="Environment_55syy"]
 background_mode = 1

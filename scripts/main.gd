@@ -6,13 +6,13 @@ signal snapshot_ready(data: Dictionary)
 signal match_completed(result: Dictionary)
 signal picture_failed(error: Error)
 
-const Pictures: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/picture_library.gd")
+const Pictures: GDScript = preload("res://games/minigame/gp_jigsaw/scripts/picture_library.gd")
 var picture_stats: Pictures = Pictures.new()
 ## Empty only in standalone F6 preview. Formal play injects the framework host clock.
 var host_clock: Callable
 
-const Match: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/match_state.gd")
-const Settings: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/settings.gd")
+const Match: GDScript = preload("res://games/minigame/gp_jigsaw/scripts/match_state.gd")
+const Settings: GDScript = preload("res://games/minigame/gp_jigsaw/settings.gd")
 const TILE_HEIGHT: float = 0.10
 const LIFT_HEIGHT: float = 0.75
 
@@ -30,8 +30,8 @@ var result_emitted: bool = false
 var sequence: int = 0
 var view: Dictionary = {}
 var publish_clock: float = 0.0
-const TileScene: PackedScene = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/puzzle_piece.tscn")
-const DefaultText: Translation = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/i18n/zh_Hans.po")
+const TileScene: PackedScene = preload("res://games/minigame/gp_jigsaw/puzzle_piece.tscn")
+const DefaultText: Translation = preload("res://games/minigame/gp_jigsaw/i18n/zh_Hans.po")
 var i18n: RefCounted
 var pieces: Array[PuzzlePiece] = []
 var seats: Array[Node3D] = []

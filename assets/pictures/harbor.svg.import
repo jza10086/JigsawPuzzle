@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dmwu4nopw6yra"
-path="res://.godot/imported/harbor.svg-aff7090442c74721409a6ebcb025778b.ctex"
+path="res://.godot/imported/harbor.svg-0a4292c10a8a1dd7c9153482b1b41e4c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://games/minigame/godot_party_default_jigsaw_puzzle/assets/pictures/harbor.svg"
-dest_files=["res://.godot/imported/harbor.svg-aff7090442c74721409a6ebcb025778b.ctex"]
+source_file="res://games/minigame/gp_jigsaw/assets/pictures/harbor.svg"
+dest_files=["res://.godot/imported/harbor.svg-0a4292c10a8a1dd7c9153482b1b41e4c.ctex"]
 
 [params]
 

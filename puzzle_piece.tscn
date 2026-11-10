@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/puzzle_piece.gd" id="1_j2kth"]
-[ext_resource type="Texture2D" path="res://games/minigame/godot_party_default_jigsaw_puzzle/assets/garden.svg" id="2_d1bbq"]
+[ext_resource type="Script" path="res://games/minigame/gp_jigsaw/scripts/puzzle_piece.gd" id="1_j2kth"]
+[ext_resource type="Texture2D" path="res://games/minigame/gp_jigsaw/assets/garden.svg" id="2_d1bbq"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bcjb5"]
 resource_local_to_scene = true

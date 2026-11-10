@@ -2,8 +2,8 @@ extends RefCounted
 ## The fixed artwork pool and this device's persistent play counts.
 ## The host draws from its own history; each peer records the host's round sequence once.
 const IDS: Array[String] = ["harbor", "balloons", "desert", "snow", "forest", "space", "reef", "windmill", "city", "tea", "railway"]
-const ASSET_ROOT: String = "res://games/minigame/godot_party_default_jigsaw_puzzle/assets/pictures/"
-const STATS_PATH: String = "minigame/godot_party_default_jigsaw_puzzle/config/picture_stats.json"
+const ASSET_ROOT: String = "res://games/minigame/gp_jigsaw/assets/pictures/"
+const STATS_PATH: String = "minigame/gp_jigsaw/config/picture_stats.json"
 var counts: Dictionary[String, int] = empty_counts()
 ## Empty until the formal entry explicitly opens persistent storage; F6 stays in memory.
 var path: String

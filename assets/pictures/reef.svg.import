@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bov1ht3muxi6y"
-path="res://.godot/imported/reef.svg-dd25cf0f1dcd45390b09c295179f27eb.ctex"
+path="res://.godot/imported/reef.svg-b266203e391339c716a1eea333e5ae98.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://games/minigame/godot_party_default_jigsaw_puzzle/assets/pictures/reef.svg"
-dest_files=["res://.godot/imported/reef.svg-dd25cf0f1dcd45390b09c295179f27eb.ctex"]
+source_file="res://games/minigame/gp_jigsaw/assets/pictures/reef.svg"
+dest_files=["res://.godot/imported/reef.svg-b266203e391339c716a1eea333e5ae98.ctex"]
 
 [params]
 

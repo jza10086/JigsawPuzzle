@@ -1,8 +1,8 @@
 extends RefCounted
 ## Host-only match rules. Times are monotonic milliseconds supplied by the caller.
 ## Each participant owns one puzzle; no client-supplied board or finish time is trusted.
-const Puzzle: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/puzzle_state.gd")
-const Pictures: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/picture_library.gd")
+const Puzzle: GDScript = preload("res://games/minigame/gp_jigsaw/scripts/puzzle_state.gd")
+const Pictures: GDScript = preload("res://games/minigame/gp_jigsaw/scripts/picture_library.gd")
 var picture_counts: Dictionary[String, int] = Pictures.empty_counts()
 var played_pictures: Array[String] = []
 

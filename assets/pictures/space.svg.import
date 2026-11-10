@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://fp4jefb8dshq"
-path="res://.godot/imported/space.svg-02395a027fd9eb2e13a678d8207baad3.ctex"
+path="res://.godot/imported/space.svg-31344a15d8d335fb25650a572703ac41.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://games/minigame/godot_party_default_jigsaw_puzzle/assets/pictures/space.svg"
-dest_files=["res://.godot/imported/space.svg-02395a027fd9eb2e13a678d8207baad3.ctex"]
+source_file="res://games/minigame/gp_jigsaw/assets/pictures/space.svg"
+dest_files=["res://.godot/imported/space.svg-31344a15d8d335fb25650a572703ac41.ctex"]
 
 [params]
 

@@ -38,7 +38,7 @@
 
 11 张图画位于 `assets/pictures/`：灯塔港湾（harbor）、云上旅行（balloons）、沙漠绿洲（desert）、雪村来信（snow）、森林蘑菇屋（forest）、星际漫游（space）、珊瑚宝藏（reef）、风车花田（windmill）、月夜小城（city）、午后茶室（tea）、山间列车（railway）。全部为本地原创 SVG，可继续编辑矢量图形；原 `garden.svg` 保留为编辑器静态预览，不参与随机池。
 
-正式入口 `party_round.gd` 创建并打开统计对象后注入玩法；没有打开存储的统计对象只保存在内存中。每台主机和客机分别维护安装根目录下的 `minigame/godot_party_default_jigsaw_puzzle/config/picture_stats.json`，通过 `PartyInput.storage_directory()` 解析，开发资料槽自动隔离在 `tmp/test/profiles/<slot>/`。首次游玩从全零开始，进入首轮准备后创建文件。格式为 `{"version": 1, "plays": {"harbor": 0, ...}}`，包含全部 11 个固定图画 ID。
+正式入口 `party_round.gd` 创建并打开统计对象后注入玩法；没有打开存储的统计对象只保存在内存中。每台主机和客机分别维护安装根目录下的 `minigame/gp_jigsaw/config/picture_stats.json`，通过 `PartyInput.storage_directory()` 解析，开发资料槽自动隔离在 `tmp/test/profiles/<slot>/`。首次游玩从全零开始，进入首轮准备后创建文件。格式为 `{"version": 1, "plays": {"harbor": 0, ...}}`，包含全部 11 个固定图画 ID。
 
 抽图以当局主机的历史为准；客机只记录主机选出的图画，不独立抽取、不用主机次数覆盖自己的历史。同一局的选图序列以可靠追加事件发送，已处理的轮次不会重复计数；晚收到事件时补记尚未处理的轮次。棋盘只发送变化格子与阶段截止时间，动画和倒计时由本地完成。双方原有次数不同，文件总数仍可不同。本机以后担任主机时，其本地记录会用于优先选图。统计通过临时文件写入后替换，读写失败或格式损坏会明确终止本局，不自动清零；统计不上传 Git。
 

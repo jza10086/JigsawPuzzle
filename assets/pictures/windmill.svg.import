@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://5mug5b78373o"
-path="res://.godot/imported/windmill.svg-998f76aaab4ce740423a7d41c1a2268e.ctex"
+path="res://.godot/imported/windmill.svg-bdfbad09509eb5b6ba2f13fc93a93dca.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://games/minigame/godot_party_default_jigsaw_puzzle/assets/pictures/windmill.svg"
-dest_files=["res://.godot/imported/windmill.svg-998f76aaab4ce740423a7d41c1a2268e.ctex"]
+source_file="res://games/minigame/gp_jigsaw/assets/pictures/windmill.svg"
+dest_files=["res://.godot/imported/windmill.svg-bdfbad09509eb5b6ba2f13fc93a93dca.ctex"]
 
 [params]
 
