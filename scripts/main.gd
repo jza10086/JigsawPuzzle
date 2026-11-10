@@ -8,6 +8,8 @@ signal picture_failed(error: Error)
 
 const Pictures: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/picture_library.gd")
 var picture_stats: Pictures = Pictures.new()
+## Empty only in standalone F6 preview. Formal play injects the framework host clock.
+var host_clock: Callable
 
 const Match: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/match_state.gd")
 const Settings: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/settings.gd")
@@ -227,6 +229,7 @@ func withdraw_player(id: String) -> void:
 
 func _publish() -> void:
 	var snapshot: Dictionary = rules.snapshot(Time.get_ticks_msec())
+	snapshot["end_msec"] = rules.phase_deadline
 	# Local host state is trusted; remote snapshots enter through receive_snapshot.
 	_apply_view(snapshot)
 	if running:
@@ -265,19 +268,7 @@ func _apply_view(data: Dictionary) -> void:
 			reference.face_material.albedo_texture = texture
 	view = data.duplicate(true)
 	answer.visible = view.phase != Match.Phase.PLAYING
-	var seconds: int = ceili(float(view.remaining_ms) / 1000.0)
-	var values: Dictionary = {"round": view.round, "total": view.rounds, "time": seconds}
-	match view.phase:
-		Match.Phase.PREPARE:
-			center_sign.text = _hud_text(&"hud.prepare", values)
-		Match.Phase.PLAYING:
-			center_sign.text = _hud_text(&"hud.playing", values)
-		Match.Phase.CLOSING:
-			center_sign.text = _hud_text(&"hud.closing", values)
-		Match.Phase.INTERMISSION:
-			center_sign.text = _hud_text(&"hud.intermission", values)
-		Match.Phase.FINISHED:
-			center_sign.text = _hud_text(&"hud.finished")
+	_update_countdown()
 	for seat: int in players.size():
 		var row: Dictionary = view.players[seat]
 		var name_text: String = _hud_text(&"hud.local_player", {"player": players[seat].name}) if seat == local_seat else players[seat].name
@@ -306,10 +297,10 @@ func _process(delta: float) -> void:
 	if not running:
 		return
 	if is_host:
+		var previous_phase: int = rules.phase
+		var previous_round: int = rules.round_index
 		rules.advance(Time.get_ticks_msec())
-		publish_clock += delta
-		if publish_clock >= 0.1:
-			publish_clock = 0.0
+		if rules.phase != previous_phase or rules.round_index != previous_round:
 			_publish()
 			if not running:
 				return
@@ -319,6 +310,7 @@ func _process(delta: float) -> void:
 			return
 	if view.is_empty():
 		return
+	_update_countdown()
 	var pointer: Vector2 = board.get_local_mouse_position()
 	for seat: int in players.size():
 		var row: Dictionary = view.players[seat]
@@ -338,3 +330,20 @@ func _process(delta: float) -> void:
 	hover_frame.visible = local_seat >= 0 and hover >= 0 and view.players[local_seat].selected >= 0
 	if hover_frame.visible:
 		hover_frame.position = seats[local_seat].to_global(_slot_center(local_seat, hover)) + Vector3(0, 0.12, 0)
+
+func _update_countdown() -> void:
+	var now: int = int(host_clock.call()) if host_clock.is_valid() else Time.get_ticks_msec()
+	view.remaining_ms = maxi(0, view.end_msec - now)
+	var seconds: int = ceili(float(view.remaining_ms) / 1000.0)
+	var values: Dictionary = {"round": view.round, "total": view.rounds, "time": seconds}
+	match view.phase:
+		Match.Phase.PREPARE:
+			center_sign.text = _hud_text(&"hud.prepare", values)
+		Match.Phase.PLAYING:
+			center_sign.text = _hud_text(&"hud.playing", values)
+		Match.Phase.CLOSING:
+			center_sign.text = _hud_text(&"hud.closing", values)
+		Match.Phase.INTERMISSION:
+			center_sign.text = _hud_text(&"hud.intermission", values)
+		Match.Phase.FINISHED:
+			center_sign.text = _hud_text(&"hud.finished")

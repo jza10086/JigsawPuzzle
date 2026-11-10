@@ -165,16 +165,16 @@ func snapshot(now: int) -> Dictionary:
 			"selected": puzzle.selected_slot, "operations": puzzle.operations, "time": finished[id],
 			"withdrawn": withdrawn[id], "total": totals[id]})
 	return {"revision": revision, "phase": phase, "round": round_index, "rounds": round_count,
-		"remaining_ms": maxi(0, phase_deadline - now), "players": rows, "pictures": played_pictures.duplicate(),
+		"remaining_ms": maxi(0, phase_deadline - now), "end_msec": phase_deadline, "players": rows, "pictures": played_pictures.duplicate(),
 		"round_rows": round_rows.duplicate(true), "rankings": rankings()}
 
 ## Host snapshots are external input too. Reject invalid identity/order or tile
 ## permutations before the view indexes meshes. Never replace a corrupt state with defaults.
 static func valid_snapshot(data: Dictionary, player_ids: Array[String]) -> bool:
-	for key: String in ["revision", "phase", "round", "rounds", "remaining_ms"]:
+	for key: String in ["revision", "phase", "round", "rounds", "remaining_ms", "end_msec"]:
 		if not data.get(key) is int:
 			return false
-	if data.revision < 1 or data.phase < Phase.PREPARE or data.phase > Phase.FINISHED or data.remaining_ms < 0:
+	if data.revision < 1 or data.phase < Phase.PREPARE or data.phase > Phase.FINISHED or data.remaining_ms < 0 or data.end_msec < 0:
 		return false
 	if data.round < 1 or data.round > data.rounds or data.rounds > 10:
 		return false

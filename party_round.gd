@@ -1,6 +1,6 @@
 extends Control
 ## Package-local PartyAPI boundary. The game owns all rounds and scoring;
-## only logical actions go to the host and only the host publishes board snapshots.
+## only logical actions go to the host; reliable events carry changed tiles and phase deadlines.
 const GameScript: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/main.gd")
 const Pages: GDScript = preload("res://games/protocols/godot_party_default_protocol/round_pages.gd")
 const Pictures: GDScript = preload("res://games/minigame/godot_party_default_jigsaw_puzzle/scripts/picture_library.gd")
@@ -12,6 +12,8 @@ var game: GameScript
 var pages: Pages
 var active: bool = false
 var _closed: bool = false
+var _published: Dictionary = {}
+var _received: Dictionary = {}
 
 func party_setup(context: PartyAPI, config: Dictionary) -> void:
 	api = context
@@ -27,6 +29,7 @@ func party_setup(context: PartyAPI, config: Dictionary) -> void:
 	game = $Gameplay
 	game.i18n = api.i18n
 	game.party_input = api.input
+	game.host_clock = api.net.host_time_msec
 	game.configure(roster, local_id, api.is_host(), api.get_seed(), api.get_settings())
 	game.action_requested.connect(_send_action)
 	game.snapshot_ready.connect(_broadcast)
@@ -76,16 +79,46 @@ func _send_action(data: Dictionary) -> void:
 func _broadcast(data: Dictionary) -> void:
 	if not active:
 		return
-	var error: Error = api.net.broadcast(SNAPSHOT, data)
+	var changed: Dictionary = {}
+	for key: String in ["phase", "round", "rounds", "end_msec", "round_rows", "rankings"]:
+		if not _published.has(key) or _published[key] != data[key]:
+			changed[key] = data[key]
+	var picture_count: int = _published.get("pictures", []).size()
+	if data.pictures.size() > picture_count:
+		changed["pictures_added"] = data.pictures.slice(picture_count)
+	var rows: Dictionary = {}
+	for index: int in data.players.size():
+		var row: Dictionary = data.players[index]
+		var previous: Dictionary = {} if _published.is_empty() else _published.players[index]
+		var patch: Dictionary = {}
+		for key: String in row:
+			if key in ["slots", "turns"]:
+				var cells: Dictionary = {}
+				for cell: int in 9:
+					if not previous.has(key) or previous[key][cell] != row[key][cell]:
+						cells[cell] = row[key][cell]
+				if not cells.is_empty():
+					patch[key] = cells
+			elif not previous.has(key) or previous[key] != row[key]:
+				patch[key] = row[key]
+		if not patch.is_empty():
+			rows[index] = patch
+	if not rows.is_empty():
+		changed["players"] = rows
+	if changed.is_empty():
+		return
+	changed["revision"] = data.revision
+	var error: Error = api.net.broadcast(SNAPSHOT, changed, MultiplayerPeer.TRANSFER_MODE_RELIABLE, false)
 	if error != OK:
-		_fail("jigsaw_snapshot", error)
+		_fail("jigsaw_event", error)
+		return
+	_published = data.duplicate(true)
 
 func _message(sender: Dictionary, topic: StringName, payload: Variant) -> void:
 	if not active or not payload is Dictionary:
 		return
 	if topic == SNAPSHOT and not api.is_host() and sender.peer_id == 1:
-		if not game.receive_snapshot(payload):
-			_fail("jigsaw_invalid_snapshot", ERR_INVALID_DATA)
+		_receive_changes(payload)
 	elif topic == ACTION and api.is_host():
 		game.receive_action(sender.peer_id, sender.player_ids, payload)
 
@@ -138,3 +171,52 @@ func _close() -> void:
 		api.net.message_received.disconnect(_message)
 	if api.players_changed.is_connected(_players_changed):
 		api.players_changed.disconnect(_players_changed)
+
+func _receive_changes(payload: Dictionary) -> void:
+	if not payload.get("revision") is int or payload.revision <= int(_received.get("revision", -1)):
+		return
+	var candidate: Dictionary = _received.duplicate(true)
+	if candidate.is_empty():
+		candidate = {"pictures": [], "players": []}
+		for player: Dictionary in api.get_players():
+			candidate.players.append({"player_id": player.player_id, "slots": [0,0,0,0,0,0,0,0,0], "turns": [0,0,0,0,0,0,0,0,0]})
+	for key: String in payload:
+		if key == "pictures_added":
+			if not payload[key] is Array:
+				_fail("jigsaw_event", ERR_INVALID_DATA)
+				return
+			candidate.pictures.append_array(payload[key])
+		elif key == "players":
+			if not payload[key] is Dictionary:
+				_fail("jigsaw_event", ERR_INVALID_DATA)
+				return
+			for index: Variant in payload.players:
+				if not index is int or index < 0 or index >= candidate.players.size() or not payload.players[index] is Dictionary:
+					_fail("jigsaw_event", ERR_INVALID_DATA)
+					return
+				for field: String in payload.players[index]:
+					var value: Variant = payload.players[index][field]
+					if field in ["slots", "turns"]:
+						if not value is Dictionary:
+							_fail("jigsaw_event", ERR_INVALID_DATA)
+							return
+						for cell: Variant in value:
+							if not cell is int or cell < 0 or cell >= 9:
+								_fail("jigsaw_event", ERR_INVALID_DATA)
+								return
+							candidate.players[index][field][cell] = value[cell]
+					else:
+						candidate.players[index][field] = value
+		elif key in ["revision", "phase", "round", "rounds", "end_msec", "round_rows", "rankings"]:
+			candidate[key] = payload[key]
+		else:
+			_fail("jigsaw_event", ERR_INVALID_DATA)
+			return
+	if not candidate.get("end_msec") is int:
+		_fail("jigsaw_event", ERR_INVALID_DATA)
+		return
+	candidate["remaining_ms"] = maxi(0, candidate.end_msec - api.net.host_time_msec())
+	if not game.receive_snapshot(candidate):
+		_fail("jigsaw_invalid_event", ERR_INVALID_DATA)
+		return
+	_received = candidate
