@@ -9,7 +9,7 @@ const SNAPSHOT: StringName = &"jigsaw/state"
 var api: PartyAPI
 var request: Dictionary
 var game: GameScript
-var pages: Pages
+@export var pages: Pages
 var active: bool = false
 var _closed: bool = false
 var _published: Dictionary = {}
@@ -51,7 +51,7 @@ func _ready() -> void:
 		_fail("jigsaw_pictures", error)
 		return
 	game.picture_stats = statistics
-	pages = Pages.new()
+	assert(pages != null, "Assign ProtocolPages in the game scene")
 	error = pages.prepare(self, api, request, _start_gameplay)
 	if error != OK:
 		_fail("jigsaw_ready", error)
