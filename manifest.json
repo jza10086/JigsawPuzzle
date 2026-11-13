@@ -1,48 +1,10 @@
 {
-  "manifest_version": 2,
-  "core_api_major": 6,
-  "package_version": "1.2.15",
-  "id": "gp_jigsaw",
   "name": "记忆拼图",
   "kind": "minigame",
-  "supported_systems": [
-    "windows"
-  ],
-  "config_schema": "settings.gd",
-  "entry": "party_round.tscn",
-  "player_counts": [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8
-  ],
-  "introduction": "八人共享九宫格棋盘，外围各拼各的，中央展示记忆答案。首位完成后公开答案并倒计时30秒；两分钟无人完成则平局。默认三轮，按累计名次分结算。",
+  "package_version": "0.0.1",
+  "framework_version": "0.0.1",
+  "remark": "",
   "dependencies": {
-    "godot_party_default_protocol": "1.0.14"
-  },
-  "adapters": [
-    {
-      "id": "standard",
-      "protocol": {
-        "id": "godot_party_default_protocol",
-        "api_major": 1,
-        "min_api_minor": 0
-      },
-      "config_schema": "settings.gd",
-      "entry": "adapter.gd"
-    }
-  ],
-  "localization": {
-    "supported_locales": [
-      "zh_Hans"
-    ],
-    "fallback_locale": "zh_Hans",
-    "translations": {
-      "zh_Hans": "i18n/zh_Hans.po"
-    }
+    "godot_party_default_protocol": "~0.0.1"
   }
 }

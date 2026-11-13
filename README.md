@@ -75,3 +75,5 @@ assets/AtelierSans.otf     随游戏精简打包的中文字体
 - `assets/garden.svg` 为本项目原创矢量插画《花园小憩》，全部图形本地绘制，无第三方图片依赖。
 - `assets/icon.svg` 为本项目原创图标。
 - `assets/AtelierSans.otf` 为 Noto Sans CJK SC 的精简子集，遵循 SIL Open Font License 1.1，见 [`assets/FONT-LICENSE.txt`](assets/FONT-LICENSE.txt)。
+
+八人共享九宫格棋盘，外围各拼各的，中央展示记忆答案。首位完成后公开答案并倒计时30秒；两分钟无人完成则平局。默认三轮，按累计名次分结算。

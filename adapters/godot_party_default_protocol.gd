@@ -1,4 +1,9 @@
 extends RefCounted
+
+## Content-owned gameplay rules, independent of package compatibility.
+static func party_definition() -> Dictionary:
+	return {"dependencies": {}}
+
 ## Standard multiplayer match: the parent receives cumulative round points, not rewards.
 
 func check_request(request: Dictionary) -> Dictionary:
