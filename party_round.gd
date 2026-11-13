@@ -1,9 +1,5 @@
 extends Control
 
-## Content-owned gameplay rules, independent of package compatibility.
-static func party_definition() -> Dictionary:
-	return {"player_counts": [1, 2, 3, 4, 5, 6, 7, 8]}
-
 ## Package-local PartyAPI boundary. The game owns all rounds and scoring;
 ## only logical actions go to the host; reliable events carry changed tiles and phase deadlines.
 const GameScript: GDScript = preload("res://games/minigame/gp_jigsaw/scripts/main.gd")
