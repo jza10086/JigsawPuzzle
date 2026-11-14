@@ -59,21 +59,19 @@ assets/AtelierSans.otf     随游戏精简打包的中文字体
 
 ## 验证
 
-本次架构改造使用系统 PATH 的 Godot 4.7.2，在主工程 `tmp/test/jigsaw_framework/` 复用和补充针对性检查，测试及输出不随内容包提交：
-
-- `preview_isolation.gd`：直接实例化未配置的 F6 场景并推进三轮，内存计数正确、既有持久化统计不变；验证编辑器相机/FOV 和近景参数生效、重复停止及停止后的输入断开。
-- `check_match.gd`：复用原规则检查，实际交换/旋转求解、截止边界、并列名次、三轮总分、断线和快照检查全部通过。
-- `check_network.gd`：复用一个旁观主机与八个 ENet 客户端检查，仅替换 PartyNet 传输边界，生产身份检查、进度、首位完成、答案公开和断线检查通过。
-- `run.py 2`：真实主菜单、大厅、协调器和 PartyAPI 的双端三轮检查通过，日志无脚本错误；双方图画一致、各自历史保留、重复快照不重复计数、落盘准确、最终奖励只提交一次，并验证入口重复停止后的信号和页面清理。
-- `capture.gd`：1920×1080 准备、比赛、缩放近景、结算倒计时截图及八席三档缩放点击定位通过；已查看远景与近景截图，棋盘和边缘操作说明保留。
-
-此前完整接入的 1、4、8 人检查及图库检查属于历史证据，本轮未重复全套矩阵。人工八人操作、跨机器/外网联机及 G01 共享协议迁移后的验收仍待完成。
+最近记录与未完成验收见 [gp_jigsaw 开发记录](gp_jigsaw_development.md)。按本次改动选取必要检查；旧测试命令不作为当前入口。
 
 ## 素材
 
 - `assets/pictures/` 为本项目原创的 11 张矢量插画，无外部素材依赖。
 - `assets/garden.svg` 为本项目原创矢量插画《花园小憩》，全部图形本地绘制，无第三方图片依赖。
 - `assets/icon.svg` 为本项目原创图标。
-- `assets/AtelierSans.otf` 为 Noto Sans CJK SC 的精简子集，遵循 SIL Open Font License 1.1，见 [`assets/FONT-LICENSE.txt`](assets/FONT-LICENSE.txt)。
+- `assets/AtelierSans.otf` 为 Noto Sans CJK SC 的精简子集，遵循 SIL Open Font License 1.1，见 [`assets/FONT-LICENSE.txt`](../assets/FONT-LICENSE.txt)。
 
 八人共享九宫格棋盘，外围各拼各的，中央展示记忆答案。首位完成后公开答案并倒计时30秒；两分钟无人完成则平局。默认三轮，按累计名次分结算。
+
+## 包内开发文档
+
+未带 `res://` 的源码路径以本包根目录为基准。
+
+- [M18 记忆拼图　A/B　依赖 G01](gp_jigsaw_development.md)
