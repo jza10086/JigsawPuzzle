@@ -69,3 +69,6 @@ msgstr "总排名 第 {rank} 名"
 
 msgid "result.score"
 msgstr "总积分"
+
+msgid "package.name"
+msgstr "记忆拼图"

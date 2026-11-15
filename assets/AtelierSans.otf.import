@@ -7,7 +7,7 @@ path="res://.godot/imported/AtelierSans.otf-115eea9238b720b7eeb351e1b3e86d8a.fon
 
 [deps]
 
-source_file="res://games/minigame/gp_jigsaw/assets/AtelierSans.otf"
+source_file="res://games/minigame/GP_jigsaw/assets/AtelierSans.otf"
 dest_files=["res://.godot/imported/AtelierSans.otf-115eea9238b720b7eeb351e1b3e86d8a.fontdata"]
 
 [params]

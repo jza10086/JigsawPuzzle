@@ -2,10 +2,10 @@
 
 来源：2026-11-07 架构审查及其最后实施记录。整理日期：2026-11-14。下列待办保留原状态；实施前核对本包源码与工作区，不以历史检查代替本次验收。
 
-[共享 G01–G03 任务](../../../protocols/godot_party_default_protocol/doc/godot_party_default_protocol_development.md) · [包说明](gp_jigsaw_guide.md)
+[共享 G01–G03 任务](../../../protocols/GP_default_protocol/doc/GP_default_protocol_development.md) · [包说明](GP_jigsaw_guide.md)
 
 
-包：`gp_jigsaw`。定位：[scripts/main.gd](../scripts/main.gd) 的 `_ready()`、`start_match()`、`_apply_view()`；[scripts/picture_library.gd](../scripts/picture_library.gd)。
+包：`GP_jigsaw`。定位：[scripts/main.gd](../scripts/main.gd) 的 `_ready()`、`start_match()`、`_apply_view()`；[scripts/picture_library.gd](../scripts/picture_library.gd)。
 
 验证：F6 不改变正式统计，正式三轮计数仍准确；交换、旋转、断线、观战房主和最终结算。
 

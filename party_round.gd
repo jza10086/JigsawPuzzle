@@ -2,9 +2,9 @@ extends Control
 
 ## Package-local PartyAPI boundary. The game owns all rounds and scoring;
 ## only logical actions go to the host; reliable events carry changed tiles and phase deadlines.
-const GameScript: GDScript = preload("res://games/minigame/gp_jigsaw/scripts/main.gd")
-const Pages: GDScript = preload("res://games/protocols/godot_party_default_protocol/round_pages.gd")
-const Pictures: GDScript = preload("res://games/minigame/gp_jigsaw/scripts/picture_library.gd")
+const GameScript: GDScript = preload("res://games/minigame/GP_jigsaw/scripts/main.gd")
+const Pages: GDScript = preload("res://games/protocols/GP_default_protocol/round_pages.gd")
+const Pictures: GDScript = preload("res://games/minigame/GP_jigsaw/scripts/picture_library.gd")
 const ACTION: StringName = &"jigsaw/action"
 const SNAPSHOT: StringName = &"jigsaw/state"
 var api: PartyAPI

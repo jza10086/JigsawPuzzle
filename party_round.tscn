@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://02pdnb5d2smj"]
 
-[ext_resource type="PackedScene" path="res://games/minigame/gp_jigsaw/ui/round_pages.tscn" id="protocol_pages"]
+[ext_resource type="PackedScene" path="res://games/minigame/GP_jigsaw/ui/round_pages.tscn" id="protocol_pages"]
 
-[ext_resource type="Script" uid="uid://42vvlqlyt5ny" path="res://games/minigame/gp_jigsaw/party_round.gd" id="1_uooo2"]
+[ext_resource type="Script" uid="uid://42vvlqlyt5ny" path="res://games/minigame/GP_jigsaw/party_round.gd" id="1_uooo2"]
 
-[ext_resource type="PackedScene" path="res://games/minigame/gp_jigsaw/main.tscn" id="game"]
+[ext_resource type="PackedScene" path="res://games/minigame/GP_jigsaw/main.tscn" id="game"]
 
 [node name="JigsawMatch" type="Control" unique_id=144905790 node_paths=PackedStringArray("pages")]
 pages = NodePath("ProtocolPages")

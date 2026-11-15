@@ -10,7 +10,7 @@ metadata={
 
 [deps]
 
-source_file="res://games/minigame/gp_jigsaw/assets/pictures/reef.svg"
+source_file="res://games/minigame/GP_jigsaw/assets/pictures/reef.svg"
 dest_files=["res://.godot/imported/reef.svg-b266203e391339c716a1eea333e5ae98.ctex"]
 
 [params]
