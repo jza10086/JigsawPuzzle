@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dtofa0aitnc3s"
-path="res://.godot/imported/railway.svg-5be993e60a1e3bdef9cdf053136a4586.ctex"
+path="res://.godot/imported/railway.svg-5fd89bf82a44fba02a5c3cf1061258e6.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://games/minigame/GP_jigsaw/assets/pictures/railway.svg"
-dest_files=["res://.godot/imported/railway.svg-5be993e60a1e3bdef9cdf053136a4586.ctex"]
+dest_files=["res://.godot/imported/railway.svg-5fd89bf82a44fba02a5c3cf1061258e6.ctex"]
 
 [params]
 

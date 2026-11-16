@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://cbrc3v7yvy3my"
-path="res://.godot/imported/AtelierSans.otf-115eea9238b720b7eeb351e1b3e86d8a.fontdata"
+path="res://.godot/imported/AtelierSans.otf-ccf94ed25502a9b2b7f28b9e92c11d9b.fontdata"
 
 [deps]
 
 source_file="res://games/minigame/GP_jigsaw/assets/AtelierSans.otf"
-dest_files=["res://.godot/imported/AtelierSans.otf-115eea9238b720b7eeb351e1b3e86d8a.fontdata"]
+dest_files=["res://.godot/imported/AtelierSans.otf-ccf94ed25502a9b2b7f28b9e92c11d9b.fontdata"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://qiblky0y2x4"
-path="res://.godot/imported/city.svg-e584073902b9cdf9920da694eaf41e5d.ctex"
+path="res://.godot/imported/city.svg-10940314ce96a1d48438b03e535d317d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://games/minigame/GP_jigsaw/assets/pictures/city.svg"
-dest_files=["res://.godot/imported/city.svg-e584073902b9cdf9920da694eaf41e5d.ctex"]
+dest_files=["res://.godot/imported/city.svg-10940314ce96a1d48438b03e535d317d.ctex"]
 
 [params]
 

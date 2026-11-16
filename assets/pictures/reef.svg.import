@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bov1ht3muxi6y"
-path="res://.godot/imported/reef.svg-b266203e391339c716a1eea333e5ae98.ctex"
+path="res://.godot/imported/reef.svg-68390c454492feae18573b8fc0d17c76.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://games/minigame/GP_jigsaw/assets/pictures/reef.svg"
-dest_files=["res://.godot/imported/reef.svg-b266203e391339c716a1eea333e5ae98.ctex"]
+dest_files=["res://.godot/imported/reef.svg-68390c454492feae18573b8fc0d17c76.ctex"]
 
 [params]
 

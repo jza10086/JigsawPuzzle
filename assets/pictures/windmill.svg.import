@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://5mug5b78373o"
-path="res://.godot/imported/windmill.svg-bdfbad09509eb5b6ba2f13fc93a93dca.ctex"
+path="res://.godot/imported/windmill.svg-0156794d3bce67b6cbd05ae88e93a593.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://games/minigame/GP_jigsaw/assets/pictures/windmill.svg"
-dest_files=["res://.godot/imported/windmill.svg-bdfbad09509eb5b6ba2f13fc93a93dca.ctex"]
+dest_files=["res://.godot/imported/windmill.svg-0156794d3bce67b6cbd05ae88e93a593.ctex"]
 
 [params]
 

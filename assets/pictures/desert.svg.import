@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://baetjtx6sj5mq"
-path="res://.godot/imported/desert.svg-f2620567f105904c488069954163a193.ctex"
+path="res://.godot/imported/desert.svg-cb55dbd58599a81dbf17c1b9de982d44.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://games/minigame/GP_jigsaw/assets/pictures/desert.svg"
-dest_files=["res://.godot/imported/desert.svg-f2620567f105904c488069954163a193.ctex"]
+dest_files=["res://.godot/imported/desert.svg-cb55dbd58599a81dbf17c1b9de982d44.ctex"]
 
 [params]
 

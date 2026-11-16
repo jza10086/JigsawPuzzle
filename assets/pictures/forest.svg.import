@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dsgv1db8ays8v"
-path="res://.godot/imported/forest.svg-d219dd8aa9ac1ac377a5d1fd6d39c7fe.ctex"
+path="res://.godot/imported/forest.svg-6d3e2c0c236f2bdb7855eadf488d9315.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://games/minigame/GP_jigsaw/assets/pictures/forest.svg"
-dest_files=["res://.godot/imported/forest.svg-d219dd8aa9ac1ac377a5d1fd6d39c7fe.ctex"]
+dest_files=["res://.godot/imported/forest.svg-6d3e2c0c236f2bdb7855eadf488d9315.ctex"]
 
 [params]
 
